@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -40,20 +41,49 @@ public class SettingsHandler
     
     
     // Define functions
-    private static string GetTheme(TopLevel topLevel)
+    public void SettingsFile(MainWindow window)
     {
-        return (topLevel.RequestedThemeVariant).ToString();
+        if (File.Exists(window._settingsFile))
+        {
+            Console.WriteLine("Settings file found");
+            Console.WriteLine(window._settingsFile);
+
+        }
+        else
+        {
+            Console.WriteLine("No settings file found, creating a new one...");
+            //using FileStream fileCreate = File.Create(window._settingsFile);
+            using FileStream fileStream = File.Open(window._settingsFile, FileMode.Append);
+            using StreamWriter file = new StreamWriter(fileStream);
+            file.Close();
+            var themeSetting = new MainWindow.UserSettings
+            {
+                ThemeSetting = "Default",
+                RowHighlightSetting = true
+            };
+            var jsonString = JsonSerializer.Serialize(themeSetting);
+            var writer = new StreamWriter(window._settingsFile);
+            writer.Write(jsonString);
+            writer.Close();
+            //fileCreate.Close();
+        }
     }
     public void GetSettingsFile(MainWindow window)
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            window._settingsFile = Directory.GetCurrentDirectory() + "\\Enviredit.json";
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Enviredit\\Enviredit.json");
+            window._settingsFile = Environment.SpecialFolder.UserProfile + "\\Enviredit.json";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            window._settingsFile= Directory.GetCurrentDirectory() + "/Enviredit.json";
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/");
+            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
         }
+    }
+    private static string GetTheme(TopLevel topLevel)
+    {
+        return (topLevel.RequestedThemeVariant).ToString();
     }
     public void SaveSettings(MainWindow window)
     {

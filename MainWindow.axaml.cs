@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -41,45 +40,16 @@ public partial class MainWindow : Window
         // Define Debug settings
         public bool? GridLinesSetting { get; set; }
     }
+    public string _settingsFile = string.Empty;
+    public string _filePath = string.Empty;
+    public string _folderPath = string.Empty;
+    public bool _isEditorView;
     public MainWindow()
     {
         InitializeComponent();
 
         settingsHandler.GetSettingsFile(this);
-
-        var settingsFilePath = String.Empty;
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            settingsFilePath = Directory.GetCurrentDirectory() + "\\Enviredit.json";
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            settingsFilePath = Directory.GetCurrentDirectory() + "/Enviredit.json";
-        }
-
-        // Create settings file if it does not exist
-        if (File.Exists(settingsFilePath))
-        {
-            Console.WriteLine("Settings file found");
-            Console.WriteLine(settingsFilePath);
-
-        }
-        else
-        {
-            Console.WriteLine("No settings file found, creating a new one...");
-            using FileStream fileStream = File.Open(settingsFilePath, FileMode.Append);
-            using StreamWriter file = new StreamWriter(fileStream);
-            file.Close();
-            var themeSetting = new UserSettings
-            {
-                ThemeSetting = "Default",
-                RowHighlightSetting = true
-            };
-            var jsonString = JsonSerializer.Serialize(themeSetting);
-            var writer = new StreamWriter(_settingsFile);
-            writer.Write(jsonString);
-            writer.Close();
-        }
+        settingsHandler.SettingsFile(this);
 
         // Refresh all settings and checkboxes
         refreshHandler.RefreshSettings(this);
@@ -103,11 +73,6 @@ public partial class MainWindow : Window
             FontFamilyComboBox.Items.Add(font);
         }
     }
-    public string _settingsFile = String.Empty;
-    public string _filePath = string.Empty;
-    public string _folderPath = string.Empty;
-    public bool _isEditorView = false;
-
 
     // MenuBar functions
     // "File"
