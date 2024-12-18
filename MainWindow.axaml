@@ -1,0 +1,125 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Enviredit.MainWindow"
+        Title="Enviredit">
+    <Grid x:Name="MainGrid" ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="File">
+                <MenuItem Click="OpenFileButton_OnClick" Header="Open File..." InputGesture="Ctrl+O" HotKey="Ctrl+O"/>
+                <MenuItem Click="OpenFolderButton_OnClick" Header="Open Folder..." InputGesture="Ctrl+Shift+O" HotKey="Ctrl+Shift+O"/>
+                <MenuItem Click="SaveButton_OnClick" Header="Save" InputGesture="Ctrl+S" HotKey="Ctrl+S"/>
+                <MenuItem x:Name="SaveAsButton" Click="SaveAsButton_OnClick" Header="Save As..." InputGesture="Ctrl+Shift+S" HotKey="Ctrl+Shift+S"/>
+                <Separator/>
+                <MenuItem Click="OpenContainingFolder_OnClick" Header="Open Containing Folder in File List"/>
+                <Separator/>
+                <MenuItem x:Name="LastFileButton" Click="LastFileButton_OnClick" Header="Fetch Last Used File"/>
+                <MenuItem x:Name="LastFolderButton" Click="LastFolderButton_OnClick" Header="Fetch Last Used Folder"/>
+                <MenuItem Click="ExitFileFolder_OnClick" Header="Exit File/Folder"/>
+                <Separator/>
+                <MenuItem Click="Exit" Header="Exit" InputGesture="Alt+F4"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Click="UndoButton_OnClick" Header="Undo" InputGesture="Ctrl+Z"/>
+                <MenuItem Click="RedoButton_OnClick" Header="Redo" InputGesture="Ctrl+Y"/>
+                <Separator/>
+                <MenuItem Click="SelectAll_OnClick" Header="Select All" InputGesture="Ctrl+A"/>
+                <Separator/>
+                <MenuItem Click="Cut" Header="Cut" InputGesture="Ctrl+X"/>
+                <MenuItem Click="Copy" Header="Copy" InputGesture="Ctrl+C"/>
+                <MenuItem Click="Paste" Header="Paste" InputGesture="Ctrl+V"/>
+                <MenuItem Click="Delete" Header="Delete" InputGesture="Delete"/>
+                <Separator/>
+                <MenuItem Header="Copy...">
+                    <MenuItem Header="Copy Current Folder Path" Click="CopyFolderPathButton_OnClick"/>
+                    <MenuItem Header="Copy Current File Path" Click="CopyFilePathButton_OnClick"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Click="OpenFind" Header="Find" InputGesture="Ctrl+F"/>
+                <MenuItem Click="OpenFindReplace" Header="Find and Replace" InputGesture="Ctrl+H"/>
+                <Separator/>
+                <MenuItem Header="Convert Selection Case...">
+                    <MenuItem Click="ConvertToUppercase_OnClick" Header="Uppercase" InputGesture="Ctrl+Shift+U" HotKey="Ctrl+Shift+U"/>
+                    <MenuItem Click="ConvertToLowercase_OnClick" Header="Lowercase" InputGesture="Ctrl+U" HotKey="Ctrl+U"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem x:Name="ToggleWordWrapButton" Click="ToggleWordWrapButton_OnClick" Header="Toggle Word Wrap"/>
+                <MenuItem x:Name="ToggleRectangularSelectionButton" Click="ToggleRectangularSelectionButton_OnClick" Header="Toggle Rectangular Selection" ToggleType="CheckBox"/>
+                <Separator/>
+                <MenuItem Click="Clear" Header="Clear"/>
+            </MenuItem>
+            <MenuItem Header="View">
+                <MenuItem x:Name="FullscreenToggleButton" Click="FullscreenToggleButton_OnClick" Header="Toggle Fullscreen" ToggleType="CheckBox" InputGesture="F11" HotKey="F11"/>
+                <MenuItem x:Name="ToggleTopmostButton" Click="ToggleTopmostButton_OnClick" Header="Toggle Always on Top" ToggleType="CheckBox"/>
+                <MenuItem x:Name="EditorViewButton" Click="EditorViewButton_OnClick" Header="Focus View on Editor" ToggleType="CheckBox"/>
+                <MenuItem x:Name="ScrollBelowDocumentButton" Click="ScrollBelowDocument_OnClick" Header="Allow Scroll Below Document" ToggleType="CheckBox"/>
+                <Separator/>
+                <MenuItem x:Name="HighlightRowButton" Click="HighlightRowButton_OnClick" Header="Highlight Current Row" ToggleType="CheckBox" IsChecked="True"/>
+                <Separator/>
+                <MenuItem x:Name="SpacesButton" Click="SpacesButton_OnClick" Header="Show/Hide Spaces" ToggleType="CheckBox"/>
+                <MenuItem x:Name="TabSpacesButton" Click="TabSpacesButton_OnClick" Header="Show/Hide Tab Spaces" ToggleType="CheckBox"/>
+                <MenuItem x:Name="ColumnRulerButton" Click="ColumnRulerButton_OnClick" Header="Show/Hide Column Ruler" ToggleType="CheckBox"/>
+                <MenuItem x:Name="EndOfLineButton" Click="EndOfLineButton_OnClick" Header="Show/Hide End of Line" ToggleType="CheckBox"/>
+                <Separator/>
+                <MenuItem x:Name="ListViewButton" Click="ListViewButton_OnClick" Header="Toggle List View Visibility" ToggleType="CheckBox" IsChecked="True"/>
+                <MenuItem x:Name="ListMoveButton" IsVisible="False" IsEnabled="False" Click="ListMoveButton_OnClick" Header="Move List Left/Right"/>
+                <Separator/>
+                <MenuItem x:Name="ViewStatusBarButton" Click="ViewStatusBarButton_OnClick" Header="Toggle Status Bar Visibility" ToggleType="CheckBox"/>
+                <MenuItem x:Name="MoveStatusBarButton" Click="MoveStatusBarButton_OnClick" Header="Move Status Bar Up/Down"/>
+            </MenuItem>
+            <MenuItem Header="Debug">
+                <MenuItem x:Name="GridLinesButton" Click="GridLinesButton_OnClick" Header="Show Grid Lines" ToggleType="CheckBox"/>
+            </MenuItem>
+            <MenuItem Header="Version">
+                <MenuItem Header="DEV BRANCH (main)"/>
+            </MenuItem>
+        </Menu>
+
+        <TextBlock x:Name="FolderPathBlock" Text="Currently Selected Folder: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="1"/>
+        <TextBlock x:Name="FilePathBlock" Text="Currently Selected File: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="2"/>
+
+        <Button x:Name="OpenFolderButton" Click="OpenFolderButton_OnClick" Content="Open Folder" HorizontalAlignment="Right" Margin="0,0,158,0" Grid.Column="1" Grid.Row="0"/>
+        <Button x:Name="OpenFileButton" Click="OpenFileButton_OnClick" Content="Open File" HorizontalAlignment="Right" Margin="0,0,75,0" Grid.Column="1" Grid.Row="0"/>
+        <Button x:Name="SettingsButton" Content="Settings" HorizontalAlignment="Right" Grid.Column="1" Grid.Row="0">
+            <Button.Flyout>
+                <MenuFlyout Placement="BottomEdgeAlignedRight">
+                    <MenuItem Header="Themes" FlowDirection="RightToLeft">
+                        <MenuItem x:Name="SystemThemeItem" Click="SystemThemeItem_OnClick" Header="Follow System" ToggleType="CheckBox" FlowDirection="LeftToRight"/>
+                        <MenuItem x:Name="LightThemeItem" Click="LightThemeItem_OnClick" Header="Light Theme" ToggleType="CheckBox" FlowDirection="LeftToRight"/>
+                        <MenuItem x:Name="DarkThemeItem" Click="DarkThemeItem_OnClick" Header="Dark Theme" ToggleType="CheckBox" FlowDirection="LeftToRight"/>
+                    </MenuItem>
+                    <MenuItem Header="Indentation Size" FlowDirection="RightToLeft">
+                        <ComboBox x:Name="IndentationSizeComboBox" SelectionChanged="IndentationSizeComboBox_OnSelectionChanged" FlowDirection="LeftToRight"/>
+                    </MenuItem>
+                    <MenuItem Header="Editor Font Family" FlowDirection="RightToLeft">
+                        <ComboBox x:Name="FontFamilyComboBox" SelectionChanged="FontFamilyComboBox_OnSelectionChanged" FlowDirection="LeftToRight"/>
+                    </MenuItem>
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
+
+        <TreeView x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="1" Grid.Row="4" Grid.RowSpan="2"/>
+        <avaloniaEdit:TextEditor x:Name="Editor" ShowLineNumbers="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="1">
+            <avaloniaEdit:TextEditor.ContextFlyout>
+                <MenuFlyout>
+                    <MenuItem Click="Cut" Header="Cut" InputGesture="CTRL+X"/>
+                    <MenuItem Click="Copy" Header="Copy" InputGesture="CTRL+C"/>
+                    <MenuItem Click="Paste" Header="Paste" InputGesture="CTRL+V"/>
+                    <Separator/>
+                    <MenuItem Click="SelectAll_OnClick" Header="Select All" InputGesture="CTRL+A"/>
+                </MenuFlyout>
+            </avaloniaEdit:TextEditor.ContextFlyout>
+        </avaloniaEdit:TextEditor>
+        <StackPanel x:Name="StatusBar" Background="DimGray" Height="25" DockPanel.Dock="Bottom" Orientation="Horizontal" Grid.Column="0" Grid.Row="5">
+            <TextBlock x:Name="StatusText" Text="Line: Column: | " Margin="5 0 0 0" VerticalAlignment="Center" FontSize="12"/>
+            <TextBlock x:Name="FileExtensionText" Text ="File Extension: | " FontSize="12" VerticalAlignment="Center"/>
+            <TextBlock x:Name="LanguageStatusText" Text="Language: " VerticalAlignment="Center" FontSize="12"/>
+        </StackPanel>
+    </Grid>
+</Window>
+
+
+
