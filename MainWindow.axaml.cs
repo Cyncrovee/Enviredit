@@ -9,14 +9,13 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
-using AvaloniaEdit;
-using AvaloniaEdit.TextMate;
-using TextMateSharp.Grammars;
 
 namespace Enviredit;
 
 public partial class MainWindow : Window
 {
+    public SettingsHandler settingsHandler = new SettingsHandler();
+    RefreshHandler refreshHandler = new RefreshHandler();
     public class UserSettings
     {
         // Define theme setting
@@ -42,17 +41,11 @@ public partial class MainWindow : Window
         // Define Debug settings
         public bool? GridLinesSetting { get; set; }
     }
-    // Json serializer write options
-    private static readonly JsonSerializerOptions JsonWriteOptions = new()
-    {
-        WriteIndented = true
-    };
-    private string _settingsFile = String.Empty;
     public MainWindow()
     {
         InitializeComponent();
 
-        GetSettingsFile();
+        settingsHandler.GetSettingsFile(this);
 
         var settingsFilePath = String.Empty;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -89,8 +82,8 @@ public partial class MainWindow : Window
         }
 
         // Refresh all settings and checkboxes
-        RefreshSettings();
-        RefreshIsChecked();
+        refreshHandler.RefreshSettings(this);
+        refreshHandler.RefreshIsChecked(this);
 
         // Set options for Editor
         Editor.Options.EnableRectangularSelection = true;
@@ -110,10 +103,10 @@ public partial class MainWindow : Window
             FontFamilyComboBox.Items.Add(font);
         }
     }
-
-    private string _filePath = string.Empty;
-    private string _folderPath = string.Empty;
-    private bool _isEditorView = false;
+    public string _settingsFile = String.Empty;
+    public string _filePath = string.Empty;
+    public string _folderPath = string.Empty;
+    public bool _isEditorView = false;
 
 
     // MenuBar functions
@@ -148,7 +141,7 @@ public partial class MainWindow : Window
             await writer.WriteAsync(Editor.Text);
             _filePath = file.Path.LocalPath;
             FilePathBlock.Text = "Currently Selected File: " + _filePath;
-            RefreshFileInformation();
+            refreshHandler.RefreshFileInformation(this);
         }
         else
         {
@@ -161,7 +154,7 @@ public partial class MainWindow : Window
         FileInfo fileInfo = new FileInfo(_filePath);
         var directoryPath = fileInfo.Directory;
         _folderPath = directoryPath.FullName;
-        RefreshList();
+        refreshHandler.RefreshList(this);
     }
     private void LastFolderButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -170,7 +163,7 @@ public partial class MainWindow : Window
         if (userSettings.LastUsedFolder == null) return;
         _folderPath = userSettings.LastUsedFolder;
         FolderPathBlock.Text = "Currently Selected Folder: " + _folderPath;
-        RefreshList();
+        refreshHandler.RefreshList(this);
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -185,7 +178,7 @@ public partial class MainWindow : Window
             Editor.Text = text;
             reader.Close();
             FilePathBlock.Text = "Currently Selected File: " + _filePath;
-            RefreshFileInformation();
+            refreshHandler.RefreshFileInformation(this);
         }
         catch (Exception ex)
         {
@@ -204,7 +197,7 @@ public partial class MainWindow : Window
     }
     private void Exit(object? sender, RoutedEventArgs e)
     {
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
         this.Close();
     }
     // "Edit"
@@ -279,7 +272,8 @@ public partial class MainWindow : Window
     private void ToggleRectangularSelectionButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.EnableRectangularSelection = !Editor.Options.EnableRectangularSelection;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);
+        //settingsHandler.SaveSettings(this);;
     }
     // "View"
     private void FullscreenToggleButton_OnClick(object? sender, RoutedEventArgs e)
@@ -334,32 +328,32 @@ public partial class MainWindow : Window
     private void ScrollBelowDocument_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.AllowScrollBelowDocument = !Editor.Options.AllowScrollBelowDocument;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void HighlightRowButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.HighlightCurrentLine = !Editor.Options.HighlightCurrentLine;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void SpacesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowSpaces = !Editor.Options.ShowSpaces;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void TabSpacesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowTabs = !Editor.Options.ShowTabs;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void ColumnRulerButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowColumnRulers = !Editor.Options.ShowColumnRulers;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void EndOfLineButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowEndOfLine = !Editor.Options.ShowEndOfLine;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void ListViewButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -374,7 +368,7 @@ public partial class MainWindow : Window
                 Editor.SetValue(Grid.ColumnSpanProperty, 1);
                 break;
         }
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void ListMoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -395,7 +389,7 @@ public partial class MainWindow : Window
     private void ViewStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
         StatusBar.IsVisible = !StatusBar.IsVisible;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     private void MoveStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -408,13 +402,13 @@ public partial class MainWindow : Window
                 StatusBar.SetValue(Grid.RowProperty, 5);
                 break;
         }
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
     // "Debug"
     private void GridLinesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         MainGrid.ShowGridLines = !MainGrid.ShowGridLines;
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
 
 
@@ -440,13 +434,13 @@ public partial class MainWindow : Window
                 using StreamReader reader = new(selectedFile);
                 var text = reader.ReadToEndAsync().Result;
                 Editor.Text = text;
-                SaveSettings();
+                settingsHandler.SaveSettings(this);;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            RefreshFileInformation();
+            refreshHandler.RefreshFileInformation(this);
         }
         else
         {
@@ -466,8 +460,8 @@ public partial class MainWindow : Window
         {
             _folderPath = folder[0].Path.LocalPath;
             FolderPathBlock.Text = "Currently Selected File: " + _folderPath;
-            RefreshList();
-            SaveSettings();
+            refreshHandler.RefreshList(this);
+            settingsHandler.SaveSettings(this);;
         }
         else
         {
@@ -481,8 +475,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = false;
 
         RequestedThemeVariant = ThemeVariant.Default;
-        RefreshFileInformation();
-        SaveSettings();
+        refreshHandler.RefreshFileInformation(this);
+        settingsHandler.SaveSettings(this);;
     }
     private void LightThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -491,8 +485,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = false;
 
         RequestedThemeVariant = ThemeVariant.Light;
-        RefreshFileInformation();
-        SaveSettings();
+        refreshHandler.RefreshFileInformation(this);
+        settingsHandler.SaveSettings(this);;
     }
     private void DarkThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -501,8 +495,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = true;
 
         RequestedThemeVariant = ThemeVariant.Dark;
-        RefreshFileInformation();
-        SaveSettings();
+        refreshHandler.RefreshFileInformation(this);
+        settingsHandler.SaveSettings(this);;
     }
     private void IndentationSizeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -514,7 +508,7 @@ public partial class MainWindow : Window
     {
         if (FontFamilyComboBox.SelectedItem == null) return;
         Editor.FontFamily = FontFamily.Parse(FontFamilyComboBox.SelectedItem.ToString());
-        SaveSettings();
+        settingsHandler.SaveSettings(this);;
     }
 
 
@@ -525,441 +519,6 @@ public partial class MainWindow : Window
     }
     private void FileList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        LoadFromList();
-    }
-
-
-    // User settings functions
-    private void GetSettingsFile()
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            _settingsFile = Directory.GetCurrentDirectory() + "\\Enviredit.json";
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            _settingsFile= Directory.GetCurrentDirectory() + "/Enviredit.json";
-        }
-    }
-    private void SaveSettings()
-    {
-        GetValue(RequestedThemeVariantProperty);
-        var userSetting = new UserSettings()
-        {
-            ThemeSetting = GetValue(RequestedThemeVariantProperty).ToString(),
-            FontFamilySetting = Editor.FontFamily.Name,
-            RectangularEditSetting = Editor.Options.EnableRectangularSelection,
-            ScrollBelowDocumentSetting = Editor.Options.AllowScrollBelowDocument,
-            RowHighlightSetting = Editor.Options.HighlightCurrentLine,
-            GridLinesSetting = MainGrid.ShowGridLines,
-            StatusBarSetting = StatusBar.GetValue(Grid.RowProperty),
-            StatusBarViewSetting = StatusBar.IsVisible,
-            SpacesEditorSetting = Editor.Options.ShowSpaces,
-            TabSpacesEditorSetting = Editor.Options.ShowTabs,
-            ColumnRulerSetting = Editor.Options.ShowColumnRulers,
-            EndOfLineSetting = Editor.Options.ShowEndOfLine,
-            ListViewSetting = FileList.IsVisible,
-
-            LastUsedFile = _filePath,
-            LastUsedFolder = _folderPath
-        };
-        var jsonString = JsonSerializer.Serialize(userSetting, JsonWriteOptions);
-        var writer = new StreamWriter(_settingsFile);
-        writer.Write(jsonString);
-        writer.Close();
-    }
-    private void RefreshSettings()
-    {
-        var jsonString = File.ReadAllText(_settingsFile);
-        var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
-        // Refresh theme setting
-        switch (userSettings.ThemeSetting)
-        {
-            case null:
-                RequestedThemeVariant = ThemeVariant.Default;
-                break;
-            case "Default":
-                RequestedThemeVariant = ThemeVariant.Default;
-                break;
-            case "Light":
-                RequestedThemeVariant = ThemeVariant.Light;
-                break;
-            case "Dark":
-                RequestedThemeVariant = ThemeVariant.Dark;
-                break;
-        }
-        // Refresh font family setting
-        switch (userSettings.FontFamilySetting)
-        {
-            case not null:
-                foreach (var fontFamily in FontManager.Current.SystemFonts)
-                {
-                    var fontResult = string.Equals(userSettings.FontFamilySetting, fontFamily.Name);
-                    if (fontResult)
-                    {
-                        Console.WriteLine("Font family found: " + fontFamily.Name);
-                        Editor.FontFamily = userSettings.FontFamilySetting;
-                        FontFamilyComboBox.PlaceholderText = fontFamily.Name;
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Font family not found: " + fontFamily.Name);
-                    }
-                }
-                break;
-        }
-        // Refresh MenuBar settings
-        // Edit
-        switch (userSettings.RectangularEditSetting)
-        {
-            case null:
-                Editor.Options.EnableRectangularSelection = true;
-                break;
-            case true:
-                Editor.Options.EnableRectangularSelection = true;
-                break;
-            case false:
-                Editor.Options.EnableRectangularSelection = false;
-                break;
-        }
-        // View
-        switch (userSettings.ScrollBelowDocumentSetting)
-        {
-            case null:
-                Editor.Options.AllowScrollBelowDocument = true;
-                break;
-            case true:
-                Editor.Options.AllowScrollBelowDocument = true;
-                break;
-            case false:
-                Editor.Options.AllowScrollBelowDocument = false;
-                break;
-        }
-        switch (userSettings.RowHighlightSetting)
-        {
-            case null:
-                Editor.Options.HighlightCurrentLine = true;
-                break;
-            case true:
-                Editor.Options.HighlightCurrentLine = true;
-                break;
-            case false:
-                Editor.Options.HighlightCurrentLine = false;
-                break;
-        }
-        switch (userSettings.SpacesEditorSetting)
-        {
-            case null:
-                Editor.Options.ShowSpaces = false;
-                break;
-            case true:
-                Editor.Options.ShowSpaces = true;
-                break;
-            case false:
-                Editor.Options.ShowSpaces = false;
-                break;
-        }
-        switch (userSettings.TabSpacesEditorSetting)
-        {
-            case null:
-                Editor.Options.ShowTabs = false;
-                break;
-            case true:
-                Editor.Options.ShowTabs = true;
-                break;
-            case false:
-                Editor.Options.ShowTabs = false;
-                break;
-        }
-        switch (userSettings.ColumnRulerSetting)
-        {
-            case null:
-                Editor.Options.ShowColumnRulers = false;
-                break;
-            case true:
-                Editor.Options.ShowColumnRulers = true;
-                break;
-            case false:
-                Editor.Options.ShowColumnRulers = false;
-                break;
-        }
-        switch (userSettings.EndOfLineSetting)
-        {
-            case null:
-                Editor.Options.ShowEndOfLine = false;
-                break;
-            case true:
-                Editor.Options.ShowEndOfLine = true;
-                break;
-            case false:
-                Editor.Options.ShowEndOfLine = false;
-                break;
-        }
-        switch (userSettings.ListViewSetting)
-        {
-            case null:
-                FileList.IsVisible = true;
-                break;
-            case true:
-                FileList.IsVisible = true;
-                break;
-            case false:
-                FileList.IsVisible = false;
-                switch (Editor.GetValue(Grid.ColumnSpanProperty))
-                {
-                    case 1:
-                        Editor.SetValue(Grid.ColumnSpanProperty, 2);
-                        break;
-                    case 2:
-                        Editor.SetValue(Grid.ColumnSpanProperty, 1);
-                        break;
-                }
-                break;
-        }
-        switch (userSettings.StatusBarViewSetting)
-        {
-            case null:
-                StatusBar.IsVisible = true;
-                break;
-            case true:
-                StatusBar.IsVisible = true;
-                break;
-            case false:
-                StatusBar.IsVisible = false;
-                break;
-        }
-        switch (userSettings.StatusBarSetting)
-        {
-            case null:
-                StatusBar.SetValue(Grid.RowProperty, 5);
-                break;
-            case 5:
-                StatusBar.SetValue(Grid.RowProperty, 5);
-                break;
-            case 3:
-                StatusBar.SetValue(Grid.RowProperty, 3);
-                break;
-        }
-        // Debug
-        switch (userSettings.GridLinesSetting)
-        {
-            case null:
-                MainGrid.ShowGridLines = false;
-                break;
-            case true:
-                MainGrid.ShowGridLines = true;
-                break;
-            case false:
-                MainGrid.ShowGridLines = false;
-                break;
-        }
-    }
-    private void RefreshIsChecked()
-    {
-        // Refresh theme setting checkbox
-        switch (GetValue(RequestedThemeVariantProperty).ToString())
-        {
-            case "Default":
-                SystemThemeItem.IsChecked = true;
-                DarkThemeItem.IsChecked = false;
-                LightThemeItem.IsChecked = false;
-                break;
-            case "Dark":
-                SystemThemeItem.IsChecked = false;
-                DarkThemeItem.IsChecked = true;
-                LightThemeItem.IsChecked = false;
-                break;
-            case "Light":
-                SystemThemeItem.IsChecked = false;
-                DarkThemeItem.IsChecked = false;
-                LightThemeItem.IsChecked = true;
-                break;
-        }
-        // Refresh Edit settings checkboxes
-        switch (Editor.Options.EnableRectangularSelection)
-        {
-            case true:
-                ToggleRectangularSelectionButton.IsChecked = true;
-                break;
-            case false:
-                ToggleRectangularSelectionButton.IsChecked = false;
-                break;
-        }
-        // Refresh View settings checkboxes
-        switch (Editor.Options.AllowScrollBelowDocument)
-        {
-            case true:
-                ScrollBelowDocumentButton.IsChecked = true;
-                break;
-            case false:
-                ScrollBelowDocumentButton.IsChecked = false;
-                break;
-        }
-        switch (Editor.Options.HighlightCurrentLine)
-        {
-            case true:
-                HighlightRowButton.IsChecked = true;
-                break;
-            case false:
-                HighlightRowButton.IsChecked = false;
-                break;
-        }
-        switch (Editor.Options.ShowSpaces)
-        {
-            case true:
-                SpacesButton.IsChecked = true;
-                break;
-            case false:
-                SpacesButton.IsChecked = false;
-                break;
-        }
-        switch (Editor.Options.ShowTabs)
-        {
-            case true:
-                TabSpacesButton.IsChecked = true;
-                break;
-            case false:
-                TabSpacesButton.IsChecked = false;
-                break;
-        }
-        switch (Editor.Options.ShowColumnRulers)
-        {
-            case true:
-                ColumnRulerButton.IsChecked = true;
-                break;
-            case false:
-                ColumnRulerButton.IsChecked = false;
-                break;
-        }
-        switch (Editor.Options.ShowEndOfLine)
-        {
-            case true:
-                EndOfLineButton.IsChecked = true;
-                break;
-            case false:
-                EndOfLineButton.IsChecked = false;
-                break;
-        }
-        switch (FileList.IsVisible)
-        {
-            case true:
-                ListViewButton.IsChecked = true;
-                break;
-            case false:
-                ListViewButton.IsChecked = false;
-                break;
-        }
-        switch (StatusBar.IsVisible)
-        {
-            case true:
-                ViewStatusBarButton.IsChecked = true;
-                break;
-            case false:
-                ViewStatusBarButton.IsChecked = false;
-                break;
-        }
-        // Refresh Debug settings checkboxes
-        switch (MainGrid.ShowGridLines)
-        {
-            case true:
-                GridLinesButton.IsChecked = true;
-                break;
-            case false:
-                GridLinesButton.IsChecked = false;
-                break;
-        }
-    }
-
-
-    // Misc functions
-    private void LoadFromList()
-    {
-        if (FileList.SelectedItem != null)
-        {
-            var selectedFile = FileList.SelectedItem.ToString();
-            _filePath = selectedFile;
-            Editor.Clear();
-
-            try
-            {
-                using StreamReader reader = new(selectedFile);
-                var text = reader.ReadToEnd();
-                Editor.Text = text;
-                reader.Close();
-                FilePathBlock.Text = "Currently Selected File: " + selectedFile;
-                SaveSettings();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        else
-        {
-            Console.WriteLine("No file selected");
-        }
-        RefreshFileInformation();
-    }
-    private void RefreshList()
-    {
-        if (_folderPath != string.Empty)
-        {
-            string[] files = Directory.GetFiles(_folderPath);
-
-            FileList.Items.Clear();
-            foreach (string file in files)
-            {
-                FileList.Items.Add(file);
-            }
-            FolderPathBlock.Text = "Currently Selected File: " + _folderPath;
-        }
-        else
-        {
-            Console.WriteLine("No folder selected");
-        }
-    }
-    private void RefreshFileInformation()
-    {
-        try
-        {
-            if (ActualThemeVariant == ThemeVariant.Default)
-            {
-                var textEditor = this.FindControl<TextEditor>("Editor");
-                var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
-                var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(_filePath)).Id;
-
-                textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                LanguageStatusText.Text= ("Language: " + languageExtension.ToUpper());
-            }
-            else if (ActualThemeVariant == ThemeVariant.Light)
-            {
-                var textEditor = this.FindControl<TextEditor>("Editor");
-                var registryOptions = new RegistryOptions(ThemeName.LightPlus);
-                var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(_filePath)).Id;
-
-                textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                LanguageStatusText.Text= ("Language: " + languageExtension.ToUpper());
-            }
-            else if (ActualThemeVariant == ThemeVariant.Dark)
-            {
-                var textEditor = this.FindControl<TextEditor>("Editor");
-                var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
-                var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(_filePath)).Id;
-
-                textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                LanguageStatusText.Text= ("Language: " + languageExtension.ToUpper());
-            }
-        }
-        catch (Exception)
-        {
-            LanguageStatusText.Text= ("Language: " + "Not a Programming Language/ Language Not Supported/ No file selected");
-            Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
-        }
-        var fileExtension = Path.GetExtension(_filePath);
-        FileExtensionText.Text = ("File Extension: " + fileExtension + " | ");
+        refreshHandler.LoadFromList(this);
     }
 }
