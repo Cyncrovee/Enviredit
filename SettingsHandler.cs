@@ -33,8 +33,11 @@ public class SettingsHandler
         public bool? ColumnRulerSetting { get; set; }
         public bool? EndOfLineSetting { get; set; }
         public bool? ListViewSetting { get; set; }
-        public bool? StatusBarViewSetting { get; set; }
-        public int? StatusBarSetting { get; set; }
+        public bool? LocationBarViewSetting { get; set; }
+        public bool? FileBarViewSetting { get; set; }
+        public bool? FileViewSetting { get; set; }
+        public int? LocationBarSetting { get; set; }
+        public int? FileBarSetting { get; set; }
         // Define Debug settings
         public bool? GridLinesSetting { get; set; }
     }
@@ -95,8 +98,10 @@ public class SettingsHandler
             ScrollBelowDocumentSetting = window.Editor.Options.AllowScrollBelowDocument,
             RowHighlightSetting = window.Editor.Options.HighlightCurrentLine,
             GridLinesSetting = window.MainGrid.ShowGridLines,
-            StatusBarSetting = window.StatusBar.GetValue(Grid.RowProperty),
-            StatusBarViewSetting = window.StatusBar.IsVisible,
+            LocationBarSetting = window.LocationBar.GetValue(Grid.RowProperty),
+            LocationBarViewSetting = window.LocationBar.IsVisible,
+            FileBarSetting = window.FileBar.GetValue(Grid.RowProperty),
+            FileBarViewSetting = window.FileBar.IsVisible,
             SpacesEditorSetting = window.Editor.Options.ShowSpaces,
             TabSpacesEditorSetting = window.Editor.Options.ShowTabs,
             ColumnRulerSetting = window.Editor.Options.ShowColumnRulers,

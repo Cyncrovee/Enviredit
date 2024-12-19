@@ -35,8 +35,11 @@ public partial class MainWindow : Window
         public bool? ColumnRulerSetting { get; set; }
         public bool? EndOfLineSetting { get; set; }
         public bool? ListViewSetting { get; set; }
-        public bool? StatusBarViewSetting { get; set; }
-        public int? StatusBarSetting { get; set; }
+        public bool? LocationBarViewSetting { get; set; }
+        public bool? FileBarViewSetting { get; set; }
+        public bool? FileViewSetting { get; set; }
+        public int? LocationBarSetting { get; set; }
+        public int? FileBarSetting { get; set; }
         // Define Debug settings
         public bool? GridLinesSetting { get; set; }
     }
@@ -353,18 +356,28 @@ public partial class MainWindow : Window
     }
     private void ViewStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        StatusBar.IsVisible = !StatusBar.IsVisible;
+        LocationBar.IsVisible = !LocationBar.IsVisible;
+        FileBar.IsVisible = !FileBar.IsVisible;
         settingsHandler.SaveSettings(this);;
     }
     private void MoveStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        switch (StatusBar.GetValue(Grid.RowProperty))
+        switch (LocationBar.GetValue(Grid.RowProperty))
         {
             case 5:
-                StatusBar.SetValue(Grid.RowProperty, 3);
+                LocationBar.SetValue(Grid.RowProperty, 3);
                 break;
             case 3:
-                StatusBar.SetValue(Grid.RowProperty, 5);
+                LocationBar.SetValue(Grid.RowProperty, 5);
+                break;
+        }
+        switch (FileBar.GetValue(Grid.RowProperty))
+        {
+            case 5:
+                FileBar.SetValue(Grid.RowProperty, 3);
+                break;
+            case 3:
+                FileBar.SetValue(Grid.RowProperty, 5);
                 break;
         }
         settingsHandler.SaveSettings(this);;
@@ -480,7 +493,9 @@ public partial class MainWindow : Window
     // Functions for Editor and FileList
     private void EditorCaret_PositionChanged(object? sender, EventArgs e)
     {
-        StatusText.Text = "Line: " + Editor.TextArea.Caret.Line + ", Column: " + Editor.TextArea.Caret.Column + " | ";
+        double x = Editor.TextArea.Caret.Line;
+        double y = Editor.TextArea.Document.LineCount;
+        StatusText.Text =  "Line: " + Editor.TextArea.Caret.Line + ", Column: " + Editor.TextArea.Caret.Column + " | " + Convert.ToInt32(x / y * 100) + "%";
     }
     private void FileList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {

@@ -161,28 +161,52 @@ public class RefreshHandler
                 }
                 break;
         }
-        switch (userSettings.StatusBarViewSetting)
+        switch (userSettings.LocationBarViewSetting)
         {
             case null:
-                window.StatusBar.IsVisible = true;
+                window.LocationBar.IsVisible = true;
                 break;
             case true:
-                window.StatusBar.IsVisible = true;
+                window.LocationBar.IsVisible = true;
                 break;
             case false:
-                window.StatusBar.IsVisible = false;
+                window.LocationBar.IsVisible = false;
                 break;
         }
-        switch (userSettings.StatusBarSetting)
+        switch (userSettings.FileBarViewSetting)
         {
             case null:
-                window.StatusBar.SetValue(Grid.RowProperty, 5);
+                window.FileBar.IsVisible = true;
+                break;
+            case true:
+                window.FileBar.IsVisible = true;
+                break;
+            case false:
+                window.FileBar.IsVisible = false;
+                break;
+        }
+        switch (userSettings.LocationBarSetting)
+        {
+            case null:
+                window.LocationBar.SetValue(Grid.RowProperty, 5);
                 break;
             case 5:
-                window.StatusBar.SetValue(Grid.RowProperty, 5);
+                window.LocationBar.SetValue(Grid.RowProperty, 5);
                 break;
             case 3:
-                window.StatusBar.SetValue(Grid.RowProperty, 3);
+                window.LocationBar.SetValue(Grid.RowProperty, 3);
+                break;
+        }
+        switch (userSettings.FileBarSetting)
+        {
+            case null:
+                window.FileBar.SetValue(Grid.RowProperty, 5);
+                break;
+            case 5:
+                window.FileBar.SetValue(Grid.RowProperty, 5);
+                break;
+            case 3:
+                window.FileBar.SetValue(Grid.RowProperty, 3);
                 break;
         }
         // Debug
@@ -298,12 +322,12 @@ public class RefreshHandler
                 window.ListViewButton.IsChecked = false;
                 break;
         }
-        switch (window.StatusBar.IsVisible)
+        switch (window.LocationBar.IsVisible, window.FileBar.IsVisible)
         {
-            case true:
+            case (true, true):
                 window.ViewStatusBarButton.IsChecked = true;
                 break;
-            case false:
+            case (false, false):
                 window.ViewStatusBarButton.IsChecked = false;
                 break;
         }
@@ -401,7 +425,7 @@ public class RefreshHandler
         }
         catch (Exception)
         {
-            window.LanguageStatusText.Text= ("Language: " + "Not a Programming Language/ Language Not Supported/ No file selected");
+            window.LanguageStatusText.Text= ("Language: " + "Language Not Found");
             Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
         }
         var fileExtension = Path.GetExtension(window._filePath);
