@@ -5,6 +5,7 @@
         xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Enviredit.MainWindow"
+        x:Name="MainWindowName"
         Title="Enviredit">
     <Grid x:Name="MainGrid" ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
         <Menu DockPanel.Dock="Top">
@@ -46,32 +47,32 @@
                     <MenuItem Click="ConvertToLowercase_OnClick" Header="Lowercase" InputGesture="Ctrl+U" HotKey="Ctrl+U"/>
                 </MenuItem>
                 <Separator/>
-                <MenuItem x:Name="ToggleWordWrapButton" Click="ToggleWordWrapButton_OnClick" Header="Toggle Word Wrap"/>
-                <MenuItem x:Name="ToggleRectangularSelectionButton" Click="ToggleRectangularSelectionButton_OnClick" Header="Toggle Rectangular Selection" ToggleType="CheckBox"/>
+                <MenuItem x:Name="ToggleWordWrapButton" Click="ToggleWordWrapButton_OnClick" Header="Toggle Word Wrap" IsChecked="{Binding #Editor.WordWrap}"/>
+                <MenuItem x:Name="ToggleRectangularSelectionButton" Click="ToggleRectangularSelectionButton_OnClick" Header="Toggle Rectangular Selection" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.EnableRectangularSelection}"/>
                 <Separator/>
                 <MenuItem Click="Clear" Header="Clear"/>
             </MenuItem>
             <MenuItem Header="View">
                 <MenuItem x:Name="FullscreenToggleButton" Click="FullscreenToggleButton_OnClick" Header="Toggle Fullscreen" ToggleType="CheckBox" InputGesture="F11" HotKey="F11"/>
-                <MenuItem x:Name="ToggleTopmostButton" Click="ToggleTopmostButton_OnClick" Header="Toggle Always on Top" ToggleType="CheckBox"/>
+                <MenuItem x:Name="ToggleTopmostButton" Click="ToggleTopmostButton_OnClick" Header="Toggle Always on Top" ToggleType="CheckBox" IsChecked="{Binding #MainWindowName.Topmost}"/>
                 <MenuItem x:Name="EditorViewButton" Click="EditorViewButton_OnClick" Header="Focus View on Editor" ToggleType="CheckBox"/>
-                <MenuItem x:Name="ScrollBelowDocumentButton" Click="ScrollBelowDocument_OnClick" Header="Allow Scroll Below Document" ToggleType="CheckBox"/>
+                <MenuItem x:Name="ScrollBelowDocumentButton" Click="ScrollBelowDocument_OnClick" Header="Allow Scroll Below Document" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.AllowScrollBelowDocument}"/>
                 <Separator/>
-                <MenuItem x:Name="HighlightRowButton" Click="HighlightRowButton_OnClick" Header="Highlight Current Row" ToggleType="CheckBox" IsChecked="True"/>
+                <MenuItem x:Name="HighlightRowButton" Click="HighlightRowButton_OnClick" Header="Highlight Current Row" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.HighlightCurrentLine}"/>
                 <Separator/>
-                <MenuItem x:Name="SpacesButton" Click="SpacesButton_OnClick" Header="Show/Hide Spaces" ToggleType="CheckBox"/>
-                <MenuItem x:Name="TabSpacesButton" Click="TabSpacesButton_OnClick" Header="Show/Hide Tab Spaces" ToggleType="CheckBox"/>
-                <MenuItem x:Name="ColumnRulerButton" Click="ColumnRulerButton_OnClick" Header="Show/Hide Column Ruler" ToggleType="CheckBox"/>
-                <MenuItem x:Name="EndOfLineButton" Click="EndOfLineButton_OnClick" Header="Show/Hide End of Line" ToggleType="CheckBox"/>
+                <MenuItem x:Name="SpacesButton" Click="SpacesButton_OnClick" Header="Show/Hide Spaces" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.ShowSpaces}"/>
+                <MenuItem x:Name="TabSpacesButton" Click="TabSpacesButton_OnClick" Header="Show/Hide Tab Spaces" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.ShowTabs}"/>
+                <MenuItem x:Name="ColumnRulerButton" Click="ColumnRulerButton_OnClick" Header="Show/Hide Column Ruler" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.ShowColumnRulers}"/>
+                <MenuItem x:Name="EndOfLineButton" Click="EndOfLineButton_OnClick" Header="Show/Hide End of Line" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.ShowEndOfLine}"/>
                 <Separator/>
-                <MenuItem x:Name="ListViewButton" Click="ListViewButton_OnClick" Header="Toggle List View Visibility" ToggleType="CheckBox" IsChecked="True"/>
+                <MenuItem x:Name="ListViewButton" Click="ListViewButton_OnClick" Header="Toggle List View Visibility" ToggleType="CheckBox" IsChecked="{Binding #FileList.IsVisible}"/>
                 <MenuItem x:Name="ListMoveButton" IsVisible="False" IsEnabled="False" Click="ListMoveButton_OnClick" Header="Move List Left/Right"/>
                 <Separator/>
                 <MenuItem x:Name="ViewStatusBarButton" Click="ViewStatusBarButton_OnClick" Header="Toggle Status Bar Visibility" ToggleType="CheckBox"/>
                 <MenuItem x:Name="MoveStatusBarButton" Click="MoveStatusBarButton_OnClick" Header="Move Status Bar Up/Down"/>
             </MenuItem>
             <MenuItem Header="Debug">
-                <MenuItem x:Name="GridLinesButton" Click="GridLinesButton_OnClick" Header="Show Grid Lines" ToggleType="CheckBox"/>
+                <MenuItem x:Name="GridLinesButton" Click="GridLinesButton_OnClick" Header="Show Grid Lines" ToggleType="CheckBox" IsChecked="{Binding #MainGrid.ShowGridLines}"/>
             </MenuItem>
             <MenuItem Header="Version">
                 <MenuItem Header="DEV BRANCH (main)"/>

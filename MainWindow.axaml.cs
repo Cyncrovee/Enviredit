@@ -273,7 +273,6 @@ public partial class MainWindow : Window
                 OpenFileButton.IsVisible = true;
                 SettingsButton.IsVisible = true;
                 FileList.IsVisible = true;
-                ListViewButton.IsChecked = true;
                 ListViewButton.IsVisible = true;
                 _isEditorView = false;
                 Editor.SetValue(Grid.ColumnProperty, 0);
@@ -287,7 +286,6 @@ public partial class MainWindow : Window
                 OpenFileButton.IsVisible = false;
                 SettingsButton.IsVisible = false;
                 FileList.IsVisible = false;
-                ListViewButton.IsChecked = false;
                 ListViewButton.IsVisible = false;
                 _isEditorView = true;
                 break;
@@ -296,7 +294,7 @@ public partial class MainWindow : Window
     private void ScrollBelowDocument_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.AllowScrollBelowDocument = !Editor.Options.AllowScrollBelowDocument;
-        settingsHandler.SaveSettings(this);;
+        settingsHandler.SaveSettings(this);
     }
     private void HighlightRowButton_OnClick(object? sender, RoutedEventArgs e)
     {

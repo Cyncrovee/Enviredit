@@ -248,80 +248,7 @@ public class RefreshHandler
                 window.LightThemeItem.IsChecked = true;
                 break;
         }
-        // Refresh Edit settings checkboxes
-        switch (window.Editor.Options.EnableRectangularSelection)
-        {
-            case true:
-                window.ToggleRectangularSelectionButton.IsChecked = true;
-                break;
-            case false:
-                window.ToggleRectangularSelectionButton.IsChecked = false;
-                break;
-        }
         // Refresh View settings checkboxes
-        switch (window.Editor.Options.AllowScrollBelowDocument)
-        {
-            case true:
-                window.ScrollBelowDocumentButton.IsChecked = true;
-                break;
-            case false:
-                window.ScrollBelowDocumentButton.IsChecked = false;
-                break;
-        }
-        switch (window.Editor.Options.HighlightCurrentLine)
-        {
-            case true:
-                window.HighlightRowButton.IsChecked = true;
-                break;
-            case false:
-                window.HighlightRowButton.IsChecked = false;
-                break;
-        }
-        switch (window.Editor.Options.ShowSpaces)
-        {
-            case true:
-                window.SpacesButton.IsChecked = true;
-                break;
-            case false:
-                window.SpacesButton.IsChecked = false;
-                break;
-        }
-        switch (window.Editor.Options.ShowTabs)
-        {
-            case true:
-                window.TabSpacesButton.IsChecked = true;
-                break;
-            case false:
-                window.TabSpacesButton.IsChecked = false;
-                break;
-        }
-        switch (window.Editor.Options.ShowColumnRulers)
-        {
-            case true:
-                window.ColumnRulerButton.IsChecked = true;
-                break;
-            case false:
-                window.ColumnRulerButton.IsChecked = false;
-                break;
-        }
-        switch (window.Editor.Options.ShowEndOfLine)
-        {
-            case true:
-                window.EndOfLineButton.IsChecked = true;
-                break;
-            case false:
-                window.EndOfLineButton.IsChecked = false;
-                break;
-        }
-        switch (window.FileList.IsVisible)
-        {
-            case true:
-                window.ListViewButton.IsChecked = true;
-                break;
-            case false:
-                window.ListViewButton.IsChecked = false;
-                break;
-        }
         switch (window.LocationBar.IsVisible, window.FileBar.IsVisible)
         {
             case (true, true):
@@ -329,16 +256,6 @@ public class RefreshHandler
                 break;
             case (false, false):
                 window.ViewStatusBarButton.IsChecked = false;
-                break;
-        }
-        // Refresh Debug settings checkboxes
-        switch (window.MainGrid.ShowGridLines)
-        {
-            case true:
-                window.GridLinesButton.IsChecked = true;
-                break;
-            case false:
-                window.GridLinesButton.IsChecked = false;
                 break;
         }
     }
