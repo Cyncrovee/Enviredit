@@ -135,6 +135,8 @@ public partial class MainWindow : Window
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
+        Editor.TextArea.Caret.Line = 1;
+        Editor.Clear();
         var jsonString = File.ReadAllText(_settingsFile);
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         if (userSettings.LastUsedFile == null) return;
@@ -142,7 +144,7 @@ public partial class MainWindow : Window
         try
         {
             using StreamReader reader = new(_filePath);
-            var text = reader.ReadToEnd();
+            var text = reader.ReadToEndAsync().Result;
             Editor.Text = text;
             reader.Close();
             FilePathBlock.Text = "Currently Selected File: " + _filePath;
