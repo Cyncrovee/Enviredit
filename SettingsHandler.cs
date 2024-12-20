@@ -75,8 +75,8 @@ public class SettingsHandler
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Enviredit\\Enviredit.json");
-            window._settingsFile = Environment.SpecialFolder.UserProfile + "\\Enviredit.json";
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\");
+            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
