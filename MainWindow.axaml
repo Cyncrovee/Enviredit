@@ -120,7 +120,7 @@
         </StackPanel>
         <StackPanel x:Name="FileBar" Height="25" DockPanel.Dock="Bottom" Orientation="Horizontal" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right">
             <TextBlock x:Name="FileExtensionText" Text ="File Extension: | " FontSize="12" VerticalAlignment="Center"/>
-            <TextBlock x:Name="LanguageStatusText" Text="Language: " VerticalAlignment="Center" FontSize="12"/>
+            <TextBlock x:Name="LanguageStatusText" Text="Language: " FontSize="12" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

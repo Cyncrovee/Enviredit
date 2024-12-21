@@ -13,8 +13,6 @@ namespace Enviredit;
 
 public partial class MainWindow : Window
 {
-    public SettingsHandler settingsHandler = new SettingsHandler();
-    RefreshHandler refreshHandler = new RefreshHandler();
     public class UserSettings
     {
         // Define theme setting
@@ -47,6 +45,8 @@ public partial class MainWindow : Window
     public string _filePath = string.Empty;
     public string _folderPath = string.Empty;
     public bool _isEditorView;
+    public SettingsHandler settingsHandler = new SettingsHandler();
+    RefreshHandler refreshHandler = new RefreshHandler();
     public MainWindow()
     {
         InitializeComponent();
@@ -135,7 +135,7 @@ public partial class MainWindow : Window
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        Editor.TextArea.Caret.Line = 1;
+        Editor.Text = string.Empty;
         Editor.Clear();
         var jsonString = File.ReadAllText(_settingsFile);
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
@@ -211,6 +211,7 @@ public partial class MainWindow : Window
     }
     private void Clear(object? sender, RoutedEventArgs e)
     {
+        Editor.Text= string.Empty;
         Editor.Clear();
     }
     private void OpenFind(object? sender, RoutedEventArgs e)
@@ -406,6 +407,7 @@ public partial class MainWindow : Window
             FilePathBlock.Text = "Currently Selected File: " + _filePath;
 
             string selectedFile = _filePath;
+            Editor.Text = string.Empty;
             Editor.Clear();
             try
             {

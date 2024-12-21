@@ -283,6 +283,7 @@ public class RefreshHandler
         {
             var selectedFile = window.FileList.SelectedItem.ToString();
             window._filePath = selectedFile;
+            window.Editor.Text = string.Empty;
             window.Editor.Clear();
 
             try
@@ -309,9 +310,9 @@ public class RefreshHandler
     {
         try
         {
+            var textEditor = window.FindControl<TextEditor>("Editor");
             if (window.ActualThemeVariant == ThemeVariant.Default)
             {
-                var textEditor = window.FindControl<TextEditor>("Editor");
                 var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
                 string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window._filePath)).Id;
@@ -321,7 +322,6 @@ public class RefreshHandler
             }
             else if (window.ActualThemeVariant == ThemeVariant.Light)
             {
-                var textEditor = window.FindControl<TextEditor>("Editor");
                 var registryOptions = new RegistryOptions(ThemeName.LightPlus);
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
                 string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window._filePath)).Id;
@@ -331,7 +331,6 @@ public class RefreshHandler
             }
             else if (window.ActualThemeVariant == ThemeVariant.Dark)
             {
-                var textEditor = window.FindControl<TextEditor>("Editor");
                 var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
                 string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window._filePath)).Id;
