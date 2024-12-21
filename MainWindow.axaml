@@ -119,6 +119,7 @@
             <TextBlock x:Name="StatusText" Text="?% | Line: Column: | " Margin="5 0 0 0" VerticalAlignment="Center" FontSize="12"/>
         </StackPanel>
         <StackPanel x:Name="FileBar" Height="25" DockPanel.Dock="Bottom" Orientation="Horizontal" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right">
+            <TextBlock x:Name="FileSizeText" Text ="File Size: | " FontSize="12" VerticalAlignment="Center"/>
             <TextBlock x:Name="FileExtensionText" Text ="File Extension: | " FontSize="12" VerticalAlignment="Center"/>
             <TextBlock x:Name="LanguageStatusText" Text="Language: " FontSize="12" VerticalAlignment="Center"/>
         </StackPanel>

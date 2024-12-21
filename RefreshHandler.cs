@@ -344,6 +344,8 @@ public class RefreshHandler
             window.LanguageStatusText.Text= ("Language: " + "Language Not Found");
             Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
         }
+        var fileInfo = new FileInfo(window._filePath);
+        window.FileSizeText.Text = "File Size: " + fileInfo.Length.ToString() + "b" + " | ";
         var fileExtension = Path.GetExtension(window._filePath);
         window.FileExtensionText.Text = ("File Extension: " + fileExtension + " | ");
     }
