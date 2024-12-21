@@ -80,8 +80,8 @@
             <MenuItem Header="About" Click="About_OnClick"/>
         </Menu>
 
-        <TextBlock x:Name="FolderPathBlock" Text="Currently Selected Folder: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="1"/>
-        <TextBlock x:Name="FilePathBlock" Text="Currently Selected File: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="2"/>
+        <TextBlock x:Name="FolderPathBlock" Text="Current Folder: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="1"/>
+        <TextBlock x:Name="FilePathBlock" Text="Current File: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="2"/>
 
         <Button x:Name="OpenFolderButton" Click="OpenFolderButton_OnClick" Content="Open Folder" HorizontalAlignment="Right" Margin="0,0,158,0" Grid.Column="1" Grid.Row="0"/>
         <Button x:Name="OpenFileButton" Click="OpenFileButton_OnClick" Content="Open File" HorizontalAlignment="Right" Margin="0,0,75,0" Grid.Column="1" Grid.Row="0"/>

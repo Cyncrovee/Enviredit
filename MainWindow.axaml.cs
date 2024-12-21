@@ -41,10 +41,10 @@ public partial class MainWindow : Window
         // Define Debug settings
         public bool? GridLinesSetting { get; set; }
     }
-    public string _settingsFile = string.Empty;
-    public string _filePath = string.Empty;
-    public string _folderPath = string.Empty;
-    public bool _isEditorView;
+    public string _settingsFile { get; set; }
+    public string _filePath { get; set; }
+    public string _folderPath { get; set; }
+    public bool _isEditorView { get; set; }
     public SettingsHandler settingsHandler = new SettingsHandler();
     RefreshHandler refreshHandler = new RefreshHandler();
     public MainWindow()
@@ -69,7 +69,6 @@ public partial class MainWindow : Window
         {
             IndentationSizeComboBox.Items.Add(indentationSize);
         }
-
         // Add font families to FontFamilyComboBox
         foreach (var font in FontManager.Current.SystemFonts.OrderBy(f => f.Name))
         {
@@ -108,7 +107,7 @@ public partial class MainWindow : Window
             await using var writer = new StreamWriter(stream);
             await writer.WriteAsync(Editor.Text);
             _filePath = file.Path.LocalPath;
-            FilePathBlock.Text = "Currently Selected File: " + _filePath;
+            FilePathBlock.Text = "Current File: " + _filePath;
             refreshHandler.RefreshFileInformation(this);
         }
         else
@@ -130,7 +129,7 @@ public partial class MainWindow : Window
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         if (userSettings.LastUsedFolder == null) return;
         _folderPath = userSettings.LastUsedFolder;
-        FolderPathBlock.Text = "Currently Selected Folder: " + _folderPath;
+        FolderPathBlock.Text = "Current Folder: " + _folderPath;
         refreshHandler.RefreshList(this);
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
@@ -147,7 +146,7 @@ public partial class MainWindow : Window
             var text = reader.ReadToEndAsync().Result;
             Editor.Text = text;
             reader.Close();
-            FilePathBlock.Text = "Currently Selected File: " + _filePath;
+            FilePathBlock.Text = "Current File: " + _filePath;
             refreshHandler.RefreshFileInformation(this);
         }
         catch (Exception ex)
@@ -162,8 +161,8 @@ public partial class MainWindow : Window
 
         FileList.Items.Clear();
 
-        FolderPathBlock.Text = "Currently Selected Folder: ";
-        FilePathBlock.Text = "Currently Selected File: ";
+        FolderPathBlock.Text = "Current Folder: ";
+        FilePathBlock.Text = "Current File: ";
     }
     private void Exit(object? sender, RoutedEventArgs e)
     {
@@ -404,7 +403,7 @@ public partial class MainWindow : Window
         if (file.Count >= 1)
         {
             _filePath = file.First().Path.LocalPath;
-            FilePathBlock.Text = "Currently Selected File: " + _filePath;
+            FilePathBlock.Text = "Current File: " + _filePath;
 
             string selectedFile = _filePath;
             Editor.Text = string.Empty;
@@ -439,7 +438,7 @@ public partial class MainWindow : Window
         if (folder.Count >= 1)
         {
             _folderPath = folder[0].Path.LocalPath;
-            FolderPathBlock.Text = "Currently Selected File: " + _folderPath;
+            FolderPathBlock.Text = "Current File: " + _folderPath;
             refreshHandler.RefreshList(this);
             settingsHandler.SaveSettings(this);;
         }

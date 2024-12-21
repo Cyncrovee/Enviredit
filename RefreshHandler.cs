@@ -270,7 +270,7 @@ public class RefreshHandler
             {
                 window.FileList.Items.Add(file);
             }
-            window.FolderPathBlock.Text = "Currently Selected File: " + window._folderPath;
+            window.FolderPathBlock.Text = "Current File: " + window._folderPath;
         }
         else
         {
@@ -292,7 +292,7 @@ public class RefreshHandler
                 var text = reader.ReadToEnd();
                 window.Editor.Text = text;
                 reader.Close();
-                window.FilePathBlock.Text = "Currently Selected File: " + selectedFile;
+                window.FilePathBlock.Text = "Current File: " + selectedFile;
                 window.settingsHandler.SaveSettings(window);
             }
             catch (Exception ex)
