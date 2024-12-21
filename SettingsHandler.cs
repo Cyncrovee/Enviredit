@@ -8,18 +8,18 @@ namespace Enviredit;
 
 public class SettingsHandler
 {
-    // Define classes
+    // Define JSON options
     private static readonly JsonSerializerOptions JsonWriteOptions = new()
     {
         WriteIndented = true
     };
+    // Define user settings
     private class UserSettings
     {
         // Define theme setting
         public string? ThemeSetting { get; set; }
         //Define font family setting
         public string? FontFamilySetting { get; set; }
-        // Define MenuBar settings
         // Define File settings
         public string? LastUsedFile { get; set; }
         public string? LastUsedFolder { get; set; }
@@ -44,6 +44,19 @@ public class SettingsHandler
     
     
     // Define functions
+    public void GetSettingsFile(MainWindow window)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\");
+            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
+        }
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/");
+            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
+        }
+    }
     public void SettingsFile(MainWindow window)
     {
         if (File.Exists(window._settingsFile))
@@ -55,7 +68,6 @@ public class SettingsHandler
         else
         {
             Console.WriteLine("No settings file found, creating a new one...");
-            //using FileStream fileCreate = File.Create(window._settingsFile);
             using FileStream fileStream = File.Open(window._settingsFile, FileMode.Append);
             using StreamWriter file = new StreamWriter(fileStream);
             file.Close();
@@ -68,20 +80,6 @@ public class SettingsHandler
             var writer = new StreamWriter(window._settingsFile);
             writer.Write(jsonString);
             writer.Close();
-            //fileCreate.Close();
-        }
-    }
-    public void GetSettingsFile(MainWindow window)
-    {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\");
-            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
-        }
-        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-        {
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/");
-            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
         }
     }
     private static string GetTheme(TopLevel topLevel)
