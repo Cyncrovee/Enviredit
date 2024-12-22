@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Avalonia.Controls;
@@ -36,6 +37,7 @@ public class RefreshHandler
         switch (userSettings.FontFamilySetting)
         {
             case not null:
+                List<FontFamily> notFoundFonts = new List<FontFamily>();
                 foreach (var fontFamily in FontManager.Current.SystemFonts)
                 {
                     var fontResult = string.Equals(userSettings.FontFamilySetting, fontFamily.Name);
@@ -48,95 +50,80 @@ public class RefreshHandler
                     }
                     else
                     {
-                        Console.WriteLine("Font family not found: " + fontFamily.Name);
+                        notFoundFonts.Add(fontFamily);
                     }
                 }
+                Console.WriteLine("Not found " + notFoundFonts.Count + " fonts");
                 break;
         }
         // Refresh MenuBar settings
         // Edit
         switch (userSettings.RectangularEditSetting)
         {
+            default:
+                window.Editor.Options.EnableRectangularSelection = userSettings.RectangularEditSetting.Value;
+                break;
             case null:
                 window.Editor.Options.EnableRectangularSelection = true;
-                break;
-            case true:
-                window.Editor.Options.EnableRectangularSelection = true;
-                break;
-            case false:
-                window.Editor.Options.EnableRectangularSelection = false;
                 break;
         }
         // View
         switch (userSettings.ScrollBelowDocumentSetting)
         {
+            default:
+                window.Editor.Options.AllowScrollBelowDocument = userSettings.ScrollBelowDocumentSetting.Value;
+                Console.WriteLine("Scroll below document: LOADED");
+                break;
             case null:
                 window.Editor.Options.AllowScrollBelowDocument = true;
+                Console.WriteLine("Scroll below document: NULL");
                 break;
-            case true:
-                window.Editor.Options.AllowScrollBelowDocument = true;
-                break;
-            case false:
-                window.Editor.Options.AllowScrollBelowDocument = false;
-                break;
+                
         }
         switch (userSettings.RowHighlightSetting)
         {
+            default:
+                window.Editor.Options.HighlightCurrentLine = userSettings.RowHighlightSetting.Value;
+                Console.WriteLine("Highlight Line: LOADED");
+                break;
             case null:
                 window.Editor.Options.HighlightCurrentLine = true;
-                break;
-            case true:
-                window.Editor.Options.HighlightCurrentLine = true;
-                break;
-            case false:
-                window.Editor.Options.HighlightCurrentLine = false;
+                Console.WriteLine("Highlight Line: NULL");
                 break;
         }
         switch (userSettings.SpacesEditorSetting)
         {
+            default:
+                window.Editor.Options.ShowSpaces = userSettings.SpacesEditorSetting.Value;
+                break;
             case null:
-                window.Editor.Options.ShowSpaces = false;
-                break;
-            case true:
-                window.Editor.Options.ShowSpaces = true;
-                break;
-            case false:
                 window.Editor.Options.ShowSpaces = false;
                 break;
         }
         switch (userSettings.TabSpacesEditorSetting)
         {
+            default:
+                window.Editor.Options.ShowTabs = userSettings.TabSpacesEditorSetting.Value;
+                break;
             case null:
-                window.Editor.Options.ShowTabs = false;
-                break;
-            case true:
-                window.Editor.Options.ShowTabs = true;
-                break;
-            case false:
                 window.Editor.Options.ShowTabs = false;
                 break;
         }
         switch (userSettings.ColumnRulerSetting)
         {
+            default:
+                window.Editor.Options.ShowColumnRulers = userSettings.ColumnRulerSetting.Value;
+                break;
             case null:
-                window.Editor.Options.ShowColumnRulers = false;
-                break;
-            case true:
-                window.Editor.Options.ShowColumnRulers = true;
-                break;
-            case false:
                 window.Editor.Options.ShowColumnRulers = false;
                 break;
         }
         switch (userSettings.EndOfLineSetting)
         {
+            default:
+                window.Editor.Options.ShowEndOfLine = userSettings.EndOfLineSetting.Value;
+                break;
             case null:
-                window.Editor.Options.ShowEndOfLine = false;
-                break;
-            case true:
-                window.Editor.Options.ShowEndOfLine = true;
-                break;
-            case false:
                 window.Editor.Options.ShowEndOfLine = false;
                 break;
         }
@@ -163,62 +150,47 @@ public class RefreshHandler
         }
         switch (userSettings.LocationBarViewSetting)
         {
+            default:
+                window.LocationBar.IsVisible = userSettings.LocationBarViewSetting.Value;
+                break;
             case null:
                 window.LocationBar.IsVisible = true;
-                break;
-            case true:
-                window.LocationBar.IsVisible = true;
-                break;
-            case false:
-                window.LocationBar.IsVisible = false;
                 break;
         }
         switch (userSettings.FileBarViewSetting)
         {
+            default:
+                window.FileBar.IsVisible = userSettings.FileBarViewSetting.Value;
+                break;
             case null:
                 window.FileBar.IsVisible = true;
-                break;
-            case true:
-                window.FileBar.IsVisible = true;
-                break;
-            case false:
-                window.FileBar.IsVisible = false;
                 break;
         }
         switch (userSettings.LocationBarSetting)
         {
+            default:
+                window.LocationBar.SetValue(Grid.RowProperty, userSettings.LocationBarSetting);
+                break;
             case null:
                 window.LocationBar.SetValue(Grid.RowProperty, 5);
-                break;
-            case 5:
-                window.LocationBar.SetValue(Grid.RowProperty, 5);
-                break;
-            case 3:
-                window.LocationBar.SetValue(Grid.RowProperty, 3);
                 break;
         }
         switch (userSettings.FileBarSetting)
         {
+            default:
+                window.FileBar.SetValue(Grid.RowProperty, userSettings.FileBarSetting);
+                break;
             case null:
                 window.FileBar.SetValue(Grid.RowProperty, 5);
-                break;
-            case 5:
-                window.FileBar.SetValue(Grid.RowProperty, 5);
-                break;
-            case 3:
-                window.FileBar.SetValue(Grid.RowProperty, 3);
                 break;
         }
         // Debug
         switch (userSettings.GridLinesSetting)
         {
+            default:
+                window.MainGrid.ShowGridLines = userSettings.GridLinesSetting.Value;
+                break;
             case null:
-                window.MainGrid.ShowGridLines = false;
-                break;
-            case true:
-                window.MainGrid.ShowGridLines = true;
-                break;
-            case false:
                 window.MainGrid.ShowGridLines = false;
                 break;
         }
