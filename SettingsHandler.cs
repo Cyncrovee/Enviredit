@@ -49,26 +49,26 @@ public class SettingsHandler
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\");
-            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
+            window.SettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/");
-            window._settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
+            window.SettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
         }
     }
     public void SettingsFile(MainWindow window)
     {
-        if (File.Exists(window._settingsFile))
+        if (File.Exists(window.SettingsFile))
         {
             Console.WriteLine("Settings file found");
-            Console.WriteLine(window._settingsFile);
+            Console.WriteLine(window.SettingsFile);
 
         }
         else
         {
             Console.WriteLine("No settings file found, creating a new one...");
-            using FileStream fileStream = File.Open(window._settingsFile, FileMode.Append);
+            using FileStream fileStream = File.Open(window.SettingsFile, FileMode.Append);
             using StreamWriter file = new StreamWriter(fileStream);
             file.Close();
             var themeSetting = new MainWindow.UserSettings
@@ -77,7 +77,7 @@ public class SettingsHandler
                 RowHighlightSetting = true
             };
             var jsonString = JsonSerializer.Serialize(themeSetting);
-            var writer = new StreamWriter(window._settingsFile);
+            var writer = new StreamWriter(window.SettingsFile);
             writer.Write(jsonString);
             writer.Close();
         }
@@ -106,11 +106,11 @@ public class SettingsHandler
             EndOfLineSetting = window.Editor.Options.ShowEndOfLine,
             ListViewSetting = window.FileList.IsVisible,
 
-            LastUsedFile = window._filePath,
-            LastUsedFolder = window._folderPath
+            LastUsedFile = window.FilePath,
+            LastUsedFolder = window.FolderPath
         };
         var jsonString = JsonSerializer.Serialize(userSetting, JsonWriteOptions);
-        var writer = new StreamWriter(window._settingsFile);
+        var writer = new StreamWriter(window.SettingsFile);
         writer.Write(jsonString);
         writer.Close();
     }

@@ -6,6 +6,7 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Enviredit.MainWindow"
         x:Name="MainWindowName"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="Enviredit">
     <Grid x:Name="MainGrid" ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto, Auto, *, Auto">
         <Menu DockPanel.Dock="Top">
@@ -66,7 +67,7 @@
                 <MenuItem x:Name="EndOfLineButton" Click="EndOfLineButton_OnClick" Header="Show/Hide End of Line" ToggleType="CheckBox" IsChecked="{Binding #Editor.Options.ShowEndOfLine}"/>
                 <Separator/>
                 <MenuItem x:Name="ListViewButton" Click="ListViewButton_OnClick" Header="Toggle List View Visibility" ToggleType="CheckBox" IsChecked="{Binding #FileList.IsVisible}"/>
-                <MenuItem x:Name="ListMoveButton" IsVisible="False" IsEnabled="False" Click="ListMoveButton_OnClick" Header="Move List Left/Right"/>
+                <MenuItem x:Name="ListMoveButton" IsVisible="False" IsEnabled="False" Header="Move List Left/Right"/>
                 <Separator/>
                 <MenuItem x:Name="ViewStatusBarButton" Click="ViewStatusBarButton_OnClick" Header="Toggle Status Bar Visibility" ToggleType="CheckBox"/>
                 <MenuItem x:Name="MoveStatusBarButton" Click="MoveStatusBarButton_OnClick" Header="Move Status Bar Up/Down"/>
@@ -80,8 +81,8 @@
             <MenuItem Header="About" Click="About_OnClick"/>
         </Menu>
 
-        <TextBlock x:Name="FolderPathBlock" Text="Current Folder: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="1"/>
-        <TextBlock x:Name="FilePathBlock" Text="Current File: " Margin="0,0,0,5" Grid.Column="0" Grid.Row="2"/>
+        <TextBlock x:Name="FolderPathBlock" Text="{Binding FolderPath, StringFormat='Current Folder: {0}'}" Margin="0,0,0,5" Grid.Column="0" Grid.Row="1"/>
+        <TextBlock x:Name="FilePathBlock" Text="{Binding FilePath, StringFormat='Current File: {0}'}" Margin="0,0,0,5" Grid.Column="0" Grid.Row="2"/>
 
         <Button x:Name="OpenFolderButton" Click="OpenFolderButton_OnClick" Content="Open Folder" HorizontalAlignment="Right" Margin="0,0,158,0" Grid.Column="1" Grid.Row="0"/>
         <Button x:Name="OpenFileButton" Click="OpenFileButton_OnClick" Content="Open File" HorizontalAlignment="Right" Margin="0,0,75,0" Grid.Column="1" Grid.Row="0"/>
@@ -119,9 +120,9 @@
             <TextBlock x:Name="StatusText" Text="?% | Line: Column: | " Margin="5 0 0 0" VerticalAlignment="Center" FontSize="12"/>
         </StackPanel>
         <StackPanel x:Name="FileBar" Height="25" DockPanel.Dock="Bottom" Orientation="Horizontal" Grid.Column="0" Grid.Row="5" HorizontalAlignment="Right">
-            <TextBlock x:Name="FileSizeText" Text ="File Size: | " FontSize="12" VerticalAlignment="Center"/>
-            <TextBlock x:Name="FileExtensionText" Text ="File Extension: | " FontSize="12" VerticalAlignment="Center"/>
-            <TextBlock x:Name="LanguageStatusText" Text="Language: " FontSize="12" VerticalAlignment="Center"/>
+            <TextBlock x:Name="FileEncodingText" Text ="{Binding Encoding, StringFormat='Encoding: {0} | '}" FontSize="12" VerticalAlignment="Center"/>
+            <TextBlock x:Name="FileExtensionText" Text ="{Binding Extension, StringFormat='Extension: {0} | '}" FontSize="12" VerticalAlignment="Center"/>
+            <TextBlock x:Name="LanguageStatusText" Text="{Binding Language, StringFormat='Language: {0}'}" FontSize="12" VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

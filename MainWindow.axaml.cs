@@ -1,6 +1,8 @@
 using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -8,55 +10,147 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using Avalonia.Styling;
+using Enviredit.Handlers;
 
 namespace Enviredit;
+
+public partial class MainWindow : INotifyPropertyChanged
+{
+    // Define variables for data binding
+    private string _folderPath = String.Empty;
+    private string _filePath = String.Empty;
+    private string _encoding = String.Empty;
+    private string _extension = String.Empty;
+    private string _language = String.Empty;
+
+    public string FolderPath
+    {
+        get
+        {
+            return _folderPath;
+        }
+        set
+        {
+            if (_folderPath != value)
+            {
+                _folderPath = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public string FilePath
+    {
+        get
+        {
+            return _filePath;
+        }
+        set
+        {
+            if (_filePath != value)
+            {
+                _filePath = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public string Encoding
+    {
+        get
+        {
+            return _encoding;
+        }
+        set
+        {
+            if (_encoding != value)
+            {
+                _encoding = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public string Extension
+    {
+        get
+        {
+            return _extension;
+        }
+        set
+        {
+            if (_extension != value)
+            {
+                _extension = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public string Language
+    {
+        get
+        {
+            return _language;
+        }
+        set
+        {
+            if (_language != value)
+            {
+                _language = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public new event PropertyChangedEventHandler? PropertyChanged;
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
 
 public partial class MainWindow : Window
 {
     public class UserSettings
     {
         // Define theme setting
-        public string? ThemeSetting { get; set; }
+        public string? ThemeSetting { get; init; }
         //Define font family setting
-        public string? FontFamilySetting { get; set; }
+        public string? FontFamilySetting { get; init; }
         // Define MenuBar settings
         // Define File settings
-        public string? LastUsedFile { get; set; }
-        public string? LastUsedFolder { get; set; }
+        public string? LastUsedFile { get; init; }
+        public string? LastUsedFolder { get; init; }
         // Define Edit settings
-        public bool? RectangularEditSetting { get; set; }
+        public bool? RectangularEditSetting { get; init; }
         // Define View settings
-        public bool? ScrollBelowDocumentSetting { get; set; }
-        public bool? RowHighlightSetting { get; set; }
-        public bool? SpacesEditorSetting { get; set; }
-        public bool? TabSpacesEditorSetting { get; set; }
-        public bool? ColumnRulerSetting { get; set; }
-        public bool? EndOfLineSetting { get; set; }
-        public bool? ListViewSetting { get; set; }
-        public bool? LocationBarViewSetting { get; set; }
-        public bool? FileBarViewSetting { get; set; }
-        public bool? FileViewSetting { get; set; }
-        public int? LocationBarSetting { get; set; }
-        public int? FileBarSetting { get; set; }
+        public bool? ScrollBelowDocumentSetting { get; init; }
+        public bool? RowHighlightSetting { get; init; }
+        public bool? SpacesEditorSetting { get; init; }
+        public bool? TabSpacesEditorSetting { get; init; }
+        public bool? ColumnRulerSetting { get; init; }
+        public bool? EndOfLineSetting { get; init; }
+        public bool? ListViewSetting { get; init; }
+        public bool? LocationBarViewSetting { get; init; }
+        public bool? FileBarViewSetting { get; init; }
+        public bool? FileViewSetting { get; init; }
+        public int? LocationBarSetting { get; init; }
+        public int? FileBarSetting { get; init; }
         // Define Debug settings
-        public bool? GridLinesSetting { get; set; }
+        public bool? GridLinesSetting { get; init; }
     }
-    public string _settingsFile { get; set; }
-    public string _filePath { get; set; }
-    public string _folderPath { get; set; }
-    public bool _isEditorView { get; set; }
-    public SettingsHandler settingsHandler = new SettingsHandler();
-    RefreshHandler refreshHandler = new RefreshHandler();
+    public string SettingsFile { get; set; }
+    private bool IsEditorView { get; set; }
+    public readonly SettingsHandler MainSettingsHandler = new();
+    private readonly RefreshHandler _mainRefreshHandler = new();
+    private readonly FileHandler _fileHandler = new();
+    private readonly FolderHandler _folderHandler = new();
     public MainWindow()
     {
         InitializeComponent();
 
-        settingsHandler.GetSettingsFile(this);
-        settingsHandler.SettingsFile(this);
+        MainSettingsHandler.GetSettingsFile(this);
+        MainSettingsHandler.SettingsFile(this);
 
         // Refresh all settings and checkboxes
-        refreshHandler.RefreshSettings(this);
-        refreshHandler.RefreshIsChecked(this);
+        _mainRefreshHandler.RefreshSettings(this);
+        _mainRefreshHandler.RefreshIsChecked(this);
 
         // Set options for Editor
         Editor.Options.EnableRectangularSelection = true;
@@ -80,9 +174,9 @@ public partial class MainWindow : Window
     // "File"
     private async void SaveButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_filePath != string.Empty)
+        if (FilePath != string.Empty)
         {
-            var writer = new StreamWriter(_filePath);
+            var writer = new StreamWriter(FilePath);
             await writer.WriteAsync(Editor.Text);
             writer.Close();
             Console.WriteLine("File saved");
@@ -106,9 +200,8 @@ public partial class MainWindow : Window
             await using var stream = await file.OpenWriteAsync();
             await using var writer = new StreamWriter(stream);
             await writer.WriteAsync(Editor.Text);
-            _filePath = file.Path.LocalPath;
-            FilePathBlock.Text = "Current File: " + _filePath;
-            refreshHandler.RefreshFileInformation(this);
+            FilePath = file.Path.LocalPath;
+            _mainRefreshHandler.RefreshFileInformation(this);
         }
         else
         {
@@ -117,56 +210,50 @@ public partial class MainWindow : Window
     }
     private void OpenContainingFolder_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_filePath == string.Empty) return;
-        FileInfo fileInfo = new FileInfo(_filePath);
+        if (FilePath == string.Empty) return;
+        FileInfo fileInfo = new FileInfo(FilePath);
         var directoryPath = fileInfo.Directory;
-        _folderPath = directoryPath.FullName;
-        refreshHandler.RefreshList(this);
+        FolderPath = directoryPath.FullName;
+        _mainRefreshHandler.RefreshList(this);
     }
     private void LastFolderButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var jsonString = File.ReadAllText(_settingsFile);
+        var jsonString = File.ReadAllText(SettingsFile);
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         if (userSettings.LastUsedFolder == null) return;
-        _folderPath = userSettings.LastUsedFolder;
-        FolderPathBlock.Text = "Current Folder: " + _folderPath;
-        refreshHandler.RefreshList(this);
+        FolderPath = userSettings.LastUsedFolder;
+        _mainRefreshHandler.RefreshList(this);
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Text = string.Empty;
         Editor.Clear();
-        var jsonString = File.ReadAllText(_settingsFile);
+        var jsonString = File.ReadAllText(SettingsFile);
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         if (userSettings.LastUsedFile == null) return;
-        _filePath = userSettings.LastUsedFile;
-        try
-        {
-            using StreamReader reader = new(_filePath);
-            var text = reader.ReadToEndAsync().Result;
-            Editor.Text = text;
-            reader.Close();
-            FilePathBlock.Text = "Current File: " + _filePath;
-            refreshHandler.RefreshFileInformation(this);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        FilePath = userSettings.LastUsedFile;
+        _fileHandler.LoadFile(this);
+        _mainRefreshHandler.RefreshFileInformation(this);
+        MainSettingsHandler.SaveSettings(this);
+        
     }
     private void ExitFileFolder_OnClick(object? sender, RoutedEventArgs e)
     {
-        _filePath = string.Empty;
-        _folderPath = string.Empty;
+        FilePath = string.Empty;
+        FolderPath = string.Empty;
+
+        Encoding = String.Empty;
+        Extension = String.Empty;
+        Language = String.Empty;
 
         FileList.Items.Clear();
-
-        FolderPathBlock.Text = "Current Folder: ";
-        FilePathBlock.Text = "Current File: ";
+        Editor.TextArea.Caret.Column = 1;
+        Editor.TextArea.Caret.Line = 1;
+        Editor.Clear();
     }
     private void Exit(object? sender, RoutedEventArgs e)
     {
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
         this.Close();
     }
     // "Edit"
@@ -200,13 +287,13 @@ public partial class MainWindow : Window
     }
     private void CopyFolderPathButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Clipboard == null || _folderPath == string.Empty) return;
-        Clipboard.SetTextAsync(_folderPath);
+        if (Clipboard == null || FolderPath == string.Empty) return;
+        Clipboard.SetTextAsync(FolderPath);
     }
     private void CopyFilePathButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Clipboard == null || _filePath == string.Empty) return;
-        Clipboard.SetTextAsync(_filePath);
+        if (Clipboard == null || FilePath == string.Empty) return;
+        Clipboard.SetTextAsync(FilePath);
     }
     private void Clear(object? sender, RoutedEventArgs e)
     {
@@ -242,8 +329,7 @@ public partial class MainWindow : Window
     private void ToggleRectangularSelectionButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.EnableRectangularSelection = !Editor.Options.EnableRectangularSelection;
-        settingsHandler.SaveSettings(this);
-        //settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);
     }
     // "View"
     private void FullscreenToggleButton_OnClick(object? sender, RoutedEventArgs e)
@@ -266,7 +352,7 @@ public partial class MainWindow : Window
     }
     private void EditorViewButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        switch (_isEditorView)
+        switch (IsEditorView)
         {
             case true:
                 FolderPathBlock.IsVisible = true;
@@ -276,7 +362,7 @@ public partial class MainWindow : Window
                 SettingsButton.IsVisible = true;
                 FileList.IsVisible = true;
                 ListViewButton.IsVisible = true;
-                _isEditorView = false;
+                IsEditorView = false;
                 Editor.SetValue(Grid.ColumnProperty, 0);
                 Editor.SetValue(Grid.RowProperty, 4);
                 Editor.SetValue(Grid.ColumnSpanProperty, 1);
@@ -289,43 +375,43 @@ public partial class MainWindow : Window
                 SettingsButton.IsVisible = false;
                 FileList.IsVisible = false;
                 ListViewButton.IsVisible = false;
-                _isEditorView = true;
+                IsEditorView = true;
                 break;
         }
     }
     private void ScrollBelowDocument_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.AllowScrollBelowDocument = !Editor.Options.AllowScrollBelowDocument;
-        settingsHandler.SaveSettings(this);
+        MainSettingsHandler.SaveSettings(this);
     }
     private void HighlightRowButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.HighlightCurrentLine = !Editor.Options.HighlightCurrentLine;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void SpacesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowSpaces = !Editor.Options.ShowSpaces;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void TabSpacesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowTabs = !Editor.Options.ShowTabs;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void ColumnRulerButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowColumnRulers = !Editor.Options.ShowColumnRulers;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void EndOfLineButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowEndOfLine = !Editor.Options.ShowEndOfLine;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void ListViewButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_isEditorView) return;
+        if (IsEditorView) return;
         FileList.IsVisible = !FileList.IsVisible;
         switch (Editor.GetValue(Grid.ColumnSpanProperty))
         {
@@ -336,9 +422,9 @@ public partial class MainWindow : Window
                 Editor.SetValue(Grid.ColumnSpanProperty, 1);
                 break;
         }
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
-    private void ListMoveButton_OnClick(object? sender, RoutedEventArgs e)
+    /*private void ListMoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
         switch (Editor.GetValue(Grid.ColumnProperty))
         {
@@ -353,12 +439,12 @@ public partial class MainWindow : Window
                 //FileList.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Right);
                 break;
         }
-    }
+    }*/
     private void ViewStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
         LocationBar.IsVisible = !LocationBar.IsVisible;
         FileBar.IsVisible = !FileBar.IsVisible;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void MoveStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -380,72 +466,28 @@ public partial class MainWindow : Window
                 FileBar.SetValue(Grid.RowProperty, 5);
                 break;
         }
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
     // "Debug"
     private void GridLinesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         MainGrid.ShowGridLines = !MainGrid.ShowGridLines;
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
 
 
     // Functions for right side buttons
     private async void OpenFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var topLevel = TopLevel.GetTopLevel(this);
-        var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
-        {
-            Title = "Open File",
-            AllowMultiple = false
-        });
-
-        if (file.Count >= 1)
-        {
-            _filePath = file.First().Path.LocalPath;
-            FilePathBlock.Text = "Current File: " + _filePath;
-
-            string selectedFile = _filePath;
-            Editor.Text = string.Empty;
-            Editor.Clear();
-            try
-            {
-                using StreamReader reader = new(selectedFile);
-                var text = reader.ReadToEndAsync().Result;
-                Editor.Text = text;
-                settingsHandler.SaveSettings(this);;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            refreshHandler.RefreshFileInformation(this);
-        }
-        else
-        {
-            Console.WriteLine("No file selected");
-        }
+        await _fileHandler.OpenFileDialog(this);
+        _fileHandler.LoadFile(this);
+        _mainRefreshHandler.RefreshFileInformation(this);
     }
     private async void OpenFolderButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var topLevel = TopLevel.GetTopLevel(this);
-        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
-        {
-            Title = "Open Folder",
-            AllowMultiple = false
-        });
-
-        if (folder.Count >= 1)
-        {
-            _folderPath = folder[0].Path.LocalPath;
-            FolderPathBlock.Text = "Current File: " + _folderPath;
-            refreshHandler.RefreshList(this);
-            settingsHandler.SaveSettings(this);;
-        }
-        else
-        {
-            Console.WriteLine("No folder selected");
-        }
+        await _folderHandler.OpenFolderDialog(this);
+        _mainRefreshHandler.RefreshList(this);
+        MainSettingsHandler.SaveSettings(this);
     }
     private void SystemThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -454,8 +496,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = false;
 
         RequestedThemeVariant = ThemeVariant.Default;
-        refreshHandler.RefreshFileInformation(this);
-        settingsHandler.SaveSettings(this);;
+        _mainRefreshHandler.RefreshFileInformation(this);
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void LightThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -464,8 +506,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = false;
 
         RequestedThemeVariant = ThemeVariant.Light;
-        refreshHandler.RefreshFileInformation(this);
-        settingsHandler.SaveSettings(this);;
+        _mainRefreshHandler.RefreshFileInformation(this);
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void DarkThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -474,8 +516,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = true;
 
         RequestedThemeVariant = ThemeVariant.Dark;
-        refreshHandler.RefreshFileInformation(this);
-        settingsHandler.SaveSettings(this);;
+        _mainRefreshHandler.RefreshFileInformation(this);
+        MainSettingsHandler.SaveSettings(this);;
     }
     private void IndentationSizeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
@@ -487,7 +529,7 @@ public partial class MainWindow : Window
     {
         if (FontFamilyComboBox.SelectedItem == null) return;
         Editor.FontFamily = FontFamily.Parse(FontFamilyComboBox.SelectedItem.ToString());
-        settingsHandler.SaveSettings(this);;
+        MainSettingsHandler.SaveSettings(this);;
     }
 
 
@@ -500,7 +542,13 @@ public partial class MainWindow : Window
     }
     private void FileList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        refreshHandler.LoadFromList(this);
+        if (FileList.SelectedItem != null)
+        {
+            FilePath = FileList.SelectedItem.ToString();
+            _fileHandler.LoadFile(this);
+            _mainRefreshHandler.RefreshFileInformation(this);
+            MainSettingsHandler.SaveSettings(this);
+        }
     }
 
     private async void About_OnClick(object? sender, RoutedEventArgs e)

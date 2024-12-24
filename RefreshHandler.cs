@@ -15,7 +15,7 @@ public class RefreshHandler
 {
     public void RefreshSettings(MainWindow window)
     {
-        var jsonString = File.ReadAllText(window._settingsFile);
+        var jsonString = File.ReadAllText(window.SettingsFile);
         var userSettings = JsonSerializer.Deserialize<MainWindow.UserSettings>(jsonString);
         // Refresh theme setting
         switch (userSettings.ThemeSetting)
@@ -72,11 +72,9 @@ public class RefreshHandler
         {
             default:
                 window.Editor.Options.AllowScrollBelowDocument = userSettings.ScrollBelowDocumentSetting.Value;
-                Console.WriteLine("Scroll below document: LOADED");
                 break;
             case null:
                 window.Editor.Options.AllowScrollBelowDocument = true;
-                Console.WriteLine("Scroll below document: NULL");
                 break;
                 
         }
@@ -84,11 +82,9 @@ public class RefreshHandler
         {
             default:
                 window.Editor.Options.HighlightCurrentLine = userSettings.RowHighlightSetting.Value;
-                Console.WriteLine("Highlight Line: LOADED");
                 break;
             case null:
                 window.Editor.Options.HighlightCurrentLine = true;
-                Console.WriteLine("Highlight Line: NULL");
                 break;
         }
         switch (userSettings.SpacesEditorSetting)
@@ -233,50 +229,20 @@ public class RefreshHandler
     }
     public void RefreshList(MainWindow window)
     {
-        if (window._folderPath != string.Empty)
+        if (window.FolderPath != string.Empty)
         {
-            string[] files = Directory.GetFiles(window._folderPath);
+            string[] files = Directory.GetFiles(window.FolderPath);
 
             window.FileList.Items.Clear();
             foreach (string file in files)
             {
                 window.FileList.Items.Add(file);
             }
-            window.FolderPathBlock.Text = "Current File: " + window._folderPath;
         }
         else
         {
             Console.WriteLine("No folder selected");
         }
-    }
-    public void LoadFromList(MainWindow window)
-    {
-        if (window.FileList.SelectedItem != null)
-        {
-            var selectedFile = window.FileList.SelectedItem.ToString();
-            window._filePath = selectedFile;
-            window.Editor.Text = string.Empty;
-            window.Editor.Clear();
-
-            try
-            {
-                using StreamReader reader = new(selectedFile);
-                var text = reader.ReadToEnd();
-                window.Editor.Text = text;
-                reader.Close();
-                window.FilePathBlock.Text = "Current File: " + selectedFile;
-                window.settingsHandler.SaveSettings(window);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        else
-        {
-            Console.WriteLine("No file selected");
-        }
-        RefreshFileInformation(window);
     }
     public void RefreshFileInformation(MainWindow window)
     {
@@ -287,28 +253,28 @@ public class RefreshHandler
             {
                 var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window._filePath)).Id;
+                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
 
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                window.LanguageStatusText.Text= ("Language: " + languageExtension.ToUpper());
+                window.Language = languageExtension.ToUpper();
             }
             else if (window.ActualThemeVariant == ThemeVariant.Light)
             {
                 var registryOptions = new RegistryOptions(ThemeName.LightPlus);
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window._filePath)).Id;
+                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
 
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                window.LanguageStatusText.Text= ("Language: " + languageExtension.ToUpper());
+                window.Language = languageExtension.ToUpper();
             }
             else if (window.ActualThemeVariant == ThemeVariant.Dark)
             {
                 var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window._filePath)).Id;
+                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
 
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                window.LanguageStatusText.Text= ("Language: " + languageExtension.ToUpper());
+                window.Language = languageExtension.ToUpper();
             }
         }
         catch (Exception)
@@ -316,9 +282,9 @@ public class RefreshHandler
             window.LanguageStatusText.Text= ("Language: " + "Language Not Found");
             Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
         }
-        var fileInfo = new FileInfo(window._filePath);
-        window.FileSizeText.Text = "File Size: " + fileInfo.Length.ToString() + "b" + " | ";
-        var fileExtension = Path.GetExtension(window._filePath);
-        window.FileExtensionText.Text = ("File Extension: " + fileExtension + " | ");
+        var fileInfo = new FileInfo(window.FilePath);
+        
+        var fileExtension = Path.GetExtension(window.FilePath);
+        window.Extension = fileExtension;
     }
 }
