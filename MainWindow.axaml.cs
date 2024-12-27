@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
@@ -8,7 +7,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit.TextMate;
 using TextMateSharp.Grammars;
-using TextMateSharp.Registry;
 
 namespace Enviredit;
 

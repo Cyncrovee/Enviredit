@@ -7,8 +7,6 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit.TextMate;
 using TextMateSharp.Grammars;
-using TextMateSharp.Registry;
-using TextMateSharp.Themes;
 
 namespace Enviredit;
 
