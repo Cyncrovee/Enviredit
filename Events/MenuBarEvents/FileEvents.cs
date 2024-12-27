@@ -82,8 +82,7 @@ public partial class MainWindow : Window
         Language = String.Empty;
 
         FileList.Items.Clear();
-        Editor.TextArea.Caret.Column = 1;
-        Editor.TextArea.Caret.Line = 1;
+        RefreshFileInformation();
         Editor.Clear();
     }
     private void Exit(object? sender, RoutedEventArgs e)

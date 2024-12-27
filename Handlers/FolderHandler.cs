@@ -10,20 +10,20 @@ public partial class MainWindow : Window
     private async Task OpenFolderDialog()
     {
         var topLevel = TopLevel.GetTopLevel(this);
-        var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+        try
         {
-            Title = "Open Folder",
-            AllowMultiple = false
-        });
-
-        if (folder != null)
-        {
+            var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
+            {
+                Title = "Open Folder",
+                AllowMultiple = false
+            });
+            if (folder == null) return;
             FolderPath = folder[0].Path.LocalPath;
             Console.WriteLine(FolderPath);
         }
-        else
+        catch (OperationCanceledException)
         {
-            Console.WriteLine("Failed to open folder");
+            // Pass
         }
     }
 }

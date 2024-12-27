@@ -7,13 +7,13 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit.TextMate;
 using TextMateSharp.Grammars;
+using TextMateSharp.Registry;
+using TextMateSharp.Themes;
 
 namespace Enviredit;
 
 public partial class MainWindow : Window
 {
-    private readonly RegistryOptions _darkModeOption = new(ThemeName.DarkPlus);
-    private readonly RegistryOptions _lightModeOption = new(ThemeName.LightPlus);
     private void RefreshSettings()
     {
         var jsonString = File.ReadAllText(SettingsFile);
@@ -245,39 +245,30 @@ public partial class MainWindow : Window
     {
         try
         {
+            MainInstallation.Dispose();
+            string languageExtension = _mainRegistryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
             if (ActualThemeVariant == ThemeVariant.Default)
             {
-                var registryOptions = _darkModeOption;
-                var textMateInstallation = Editor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
-
-                textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                Language = languageExtension.ToUpper();
+                _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
             }
             else if (ActualThemeVariant == ThemeVariant.Light)
             {
-                var registryOptions = _lightModeOption;
-                var textMateInstallation = Editor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
-
-                textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                Language = languageExtension.ToUpper();
+                _mainRegistryOptions.LoadTheme(ThemeName.LightPlus);
             }
             else if (ActualThemeVariant == ThemeVariant.Dark)
             {
-                var registryOptions = _darkModeOption;
-                var textMateInstallation = Editor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
-
-                textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                Language = languageExtension.ToUpper();
+                _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
             }
+
+            MainInstallation = Editor.InstallTextMate(_mainRegistryOptions);
+            MainInstallation.SetGrammar(_mainRegistryOptions.GetScopeByLanguageId(languageExtension));
+            Language = languageExtension.ToUpper();
         }
-        catch (Exception)
+        catch (NullReferenceException)
         {
-            LanguageStatusText.Text= ("Language: " + "Language Not Found");
-            Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
+            Language = "Language Not Found";
         }
+
         Extension = Path.GetExtension(FilePath);
     }
 }

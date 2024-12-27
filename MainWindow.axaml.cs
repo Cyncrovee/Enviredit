@@ -1,9 +1,14 @@
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Avalonia.Styling;
+using AvaloniaEdit.TextMate;
+using TextMateSharp.Grammars;
+using TextMateSharp.Registry;
 
 namespace Enviredit;
 
@@ -128,15 +133,29 @@ public partial class MainWindow : Window
         // Define Debug settings
         public bool? GridLinesSetting { get; init; }
     }
-    public string SettingsFile { get; set; }
+    private string SettingsFile { get; set; }
     private bool IsEditorView { get; set; }
-    //public readonly SettingsHandler MainSettingsHandler = new();
-    //private readonly RefreshHandler _mainRefreshHandler = new();
-    //private readonly FileHandler _fileHandler = new();
-    //private readonly FolderHandler _folderHandler = new();
+    private readonly RegistryOptions _mainRegistryOptions = new(ThemeName.DarkPlus);
+    private TextMate.Installation? MainInstallation { get; set; }
     public MainWindow()
     {
+        if (ActualThemeVariant == ThemeVariant.Default)
+        {
+            _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
+
+        }
+        else if (ActualThemeVariant == ThemeVariant.Light)
+        {
+            _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
+        }
+        else if (ActualThemeVariant == ThemeVariant.Dark)
+        {
+            _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
+        }
+
         InitializeComponent();
+        
+        MainInstallation = Editor.InstallTextMate(_mainRegistryOptions);
 
         GetSettingsFile();
         FindSettingsFile();

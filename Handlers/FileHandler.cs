@@ -18,13 +18,21 @@ public partial class MainWindow : Window
     private async Task OpenFileDialog()
     {
         var topLevel = TopLevel.GetTopLevel(this);
-        var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+        try
         {
-            Title = "Select File",
-            AllowMultiple = false
-        });
+            var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
+            {
+                Title = "Select File",
+                AllowMultiple = false
+            });
 
-        FilePath = file.First().Path.LocalPath;
+            if (file.First() == null) return;
+            FilePath = file.First().Path.LocalPath;
+        }
+        catch (OperationCanceledException)
+        {
+            // Pass
+        }
     }
     private void LoadFile()
     {

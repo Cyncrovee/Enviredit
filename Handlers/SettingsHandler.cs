@@ -90,5 +90,6 @@ public partial class MainWindow : Window
         }
         userSetting = null;
         GC.Collect();
+        GC.WaitForPendingFinalizers();
     }
 }
