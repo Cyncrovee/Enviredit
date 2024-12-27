@@ -1,4 +1,5 @@
-﻿using Avalonia.Controls;
+﻿using System;
+using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 namespace Enviredit;
@@ -35,17 +36,17 @@ public partial class MainWindow : Window
     }
     private void CopyFolderPathButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Clipboard == null || FolderPath == string.Empty) return;
+        if (Clipboard == null || FolderPath == String.Empty) return;
         Clipboard.SetTextAsync(FolderPath);
     }
     private void CopyFilePathButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (Clipboard == null || FilePath == string.Empty) return;
+        if (Clipboard == null || FilePath == String.Empty) return;
         Clipboard.SetTextAsync(FilePath);
     }
     private void Clear(object? sender, RoutedEventArgs e)
     {
-        Editor.Text= string.Empty;
+        Editor.Text= String.Empty;
         Editor.Clear();
     }
     private void OpenFind(object? sender, RoutedEventArgs e)

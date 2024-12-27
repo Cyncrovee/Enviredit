@@ -11,41 +11,25 @@ public partial class MainWindow : Window
 {
     private async void SaveButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (FilePath == string.Empty) return;
-        await using (var writer = new StreamWriter(FilePath))
+        if (FilePath == String.Empty | FilePath == null)
         {
-            await writer.WriteAsync(Editor.Text);
-            writer.Close();
-            Console.WriteLine("File saved");
+            await SaveFileAs();
+            RefreshList();
+        }
+        else
+        {
+            await SaveFile();
+            RefreshList();
         }
     }
     private async void SaveAsButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var topLevel = GetTopLevel(this);
-
-        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
-        {
-            Title = "Save File"
-        });
-
-        if (file is not null)
-        {
-            FilePath = file.Path.LocalPath;
-            await using (var writer = new StreamWriter(FilePath))
-            {
-                await writer.WriteLineAsync(Editor.Text);
-                writer.Close();
-            }
-            RefreshFileInformation();
-        }
-        else
-        {
-            Console.WriteLine("No file created");
-        }
+        await SaveFileAs();
+        RefreshList();
     }
     private void OpenContainingFolder_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (FilePath == string.Empty) return;
+        if (FilePath == String.Empty) return;
         FileInfo fileInfo = new FileInfo(FilePath);
         var directoryPath = fileInfo.Directory;
         FolderPath = directoryPath.FullName;
@@ -61,7 +45,7 @@ public partial class MainWindow : Window
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        Editor.Text = string.Empty;
+        Editor.Text = String.Empty;
         Editor.Clear();
         var jsonString = File.ReadAllText(SettingsFile);
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
@@ -74,8 +58,8 @@ public partial class MainWindow : Window
     }
     private void ExitFileFolder_OnClick(object? sender, RoutedEventArgs e)
     {
-        FilePath = string.Empty;
-        FolderPath = string.Empty;
+        FilePath = String.Empty;
+        FolderPath = String.Empty;
 
         Encoding = String.Empty;
         Extension = String.Empty;
@@ -83,6 +67,8 @@ public partial class MainWindow : Window
 
         FileList.Items.Clear();
         RefreshFileInformation();
+        Editor.TextArea.Caret.Column = 1;
+        Editor.TextArea.Caret.Line = 1;
         Editor.Clear();
     }
     private void Exit(object? sender, RoutedEventArgs e)

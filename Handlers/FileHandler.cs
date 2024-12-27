@@ -14,6 +14,42 @@ public partial class MainWindow : Window
         Mode = FileMode.Open,
         Access = FileAccess.Read,
     };
+    
+    private async Task SaveFile()
+    {
+        if (FilePath == String.Empty) return;
+        await using (var writer = new StreamWriter(FilePath))
+        {
+            await writer.WriteAsync(Editor.Text);
+            writer.Close();
+            Console.WriteLine("File saved");
+        }
+    }
+    private async Task SaveFileAs()
+    {
+        var topLevel = GetTopLevel(this);
+
+        var file = await topLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+        {
+            Title = "Save File"
+        });
+
+        if (file is not null)
+        {
+            FilePath = file.Path.LocalPath;
+            await using (var writer = new StreamWriter(FilePath))
+            {
+                await writer.WriteLineAsync(Editor.Text);
+                writer.Close();
+            }
+            RefreshFileInformation();
+        }
+        else
+        {
+            Console.WriteLine("No file created");
+        }
+    }
+
     private async Task OpenFileDialog()
     {
         var topLevel = TopLevel.GetTopLevel(this);

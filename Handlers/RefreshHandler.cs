@@ -224,7 +224,7 @@ public partial class MainWindow : Window
     }
     private void RefreshList()
     {
-        if (FolderPath != string.Empty)
+        if (FolderPath != String.Empty)
         {
             string[] files = Directory.GetFiles(FolderPath);
 
@@ -244,7 +244,6 @@ public partial class MainWindow : Window
         try
         {
             MainInstallation.Dispose();
-            string languageExtension = _mainRegistryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
             if (ActualThemeVariant == ThemeVariant.Default)
             {
                 _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
@@ -257,7 +256,7 @@ public partial class MainWindow : Window
             {
                 _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
             }
-
+            string languageExtension = _mainRegistryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
             MainInstallation = Editor.InstallTextMate(_mainRegistryOptions);
             MainInstallation.SetGrammar(_mainRegistryOptions.GetScopeByLanguageId(languageExtension));
             Language = languageExtension.ToUpper();
