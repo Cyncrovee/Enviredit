@@ -7,12 +7,15 @@ using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
+using Enviredit.Handlers;
 using TextMateSharp.Grammars;
 
 namespace Enviredit;
 
 public class RefreshHandler
 {
+    private readonly RegistryOptions _darkModeOption = new(ThemeName.DarkPlus);
+    private readonly RegistryOptions _lightModeOption = new(ThemeName.LightPlus);
     public void RefreshSettings(MainWindow window)
     {
         var jsonString = File.ReadAllText(window.SettingsFile);
@@ -251,7 +254,7 @@ public class RefreshHandler
             var textEditor = window.FindControl<TextEditor>("Editor");
             if (window.ActualThemeVariant == ThemeVariant.Default)
             {
-                var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
+                var registryOptions = _darkModeOption;
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
                 string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
 
@@ -260,7 +263,7 @@ public class RefreshHandler
             }
             else if (window.ActualThemeVariant == ThemeVariant.Light)
             {
-                var registryOptions = new RegistryOptions(ThemeName.LightPlus);
+                var registryOptions = _lightModeOption;
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
                 string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
 
@@ -269,7 +272,7 @@ public class RefreshHandler
             }
             else if (window.ActualThemeVariant == ThemeVariant.Dark)
             {
-                var registryOptions = new RegistryOptions(ThemeName.DarkPlus);
+                var registryOptions = _darkModeOption;
                 var textMateInstallation = textEditor.InstallTextMate(registryOptions);
                 string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
 
@@ -282,9 +285,6 @@ public class RefreshHandler
             window.LanguageStatusText.Text= ("Language: " + "Language Not Found");
             Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
         }
-        var fileInfo = new FileInfo(window.FilePath);
-        
-        var fileExtension = Path.GetExtension(window.FilePath);
-        window.Extension = fileExtension;
+        window.Extension = Path.GetExtension(window.FilePath);
     }
 }

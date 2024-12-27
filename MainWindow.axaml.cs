@@ -1,15 +1,9 @@
 using System;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Platform.Storage;
-using Avalonia.Styling;
 using Enviredit.Handlers;
 
 namespace Enviredit;

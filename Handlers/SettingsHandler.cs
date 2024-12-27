@@ -70,16 +70,18 @@ public class SettingsHandler
             Console.WriteLine("No settings file found, creating a new one...");
             using FileStream fileStream = File.Open(window.SettingsFile, FileMode.Append);
             using StreamWriter file = new StreamWriter(fileStream);
-            file.Close();
             var themeSetting = new MainWindow.UserSettings
             {
                 ThemeSetting = "Default",
                 RowHighlightSetting = true
             };
+            fileStream.Close();
             var jsonString = JsonSerializer.Serialize(themeSetting);
-            var writer = new StreamWriter(window.SettingsFile);
-            writer.Write(jsonString);
-            writer.Close();
+            using (var writer = new StreamWriter(window.SettingsFile))
+            {
+                writer.Write(jsonString);
+                writer.Close();
+            }
         }
     }
     private static string GetTheme(TopLevel topLevel)
@@ -110,8 +112,12 @@ public class SettingsHandler
             LastUsedFolder = window.FolderPath
         };
         var jsonString = JsonSerializer.Serialize(userSetting, JsonWriteOptions);
-        var writer = new StreamWriter(window.SettingsFile);
-        writer.Write(jsonString);
-        writer.Close();
+        using (var writer = new StreamWriter(window.SettingsFile))
+        {
+            writer.Write(jsonString);
+            writer.Close();
+        }
+        userSetting = null;
+        GC.Collect();
     }
 }

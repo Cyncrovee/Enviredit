@@ -11,16 +11,12 @@ public partial class MainWindow : Window
 {
     private async void SaveButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (FilePath != string.Empty)
+        if (FilePath == string.Empty) return;
+        await using (var writer = new StreamWriter(FilePath))
         {
-            var writer = new StreamWriter(FilePath);
             await writer.WriteAsync(Editor.Text);
             writer.Close();
             Console.WriteLine("File saved");
-        }
-        else
-        {
-            Console.WriteLine("No file selected");
         }
     }
     private async void SaveAsButton_OnClick(object? sender, RoutedEventArgs e)
@@ -34,10 +30,12 @@ public partial class MainWindow : Window
 
         if (file is not null)
         {
-            await using var stream = await file.OpenWriteAsync();
-            await using var writer = new StreamWriter(stream);
-            await writer.WriteAsync(Editor.Text);
-            FilePath = file.Path.LocalPath;
+            await using (var writer = new StreamWriter(FilePath))
+            {
+                await writer.WriteLineAsync(Editor.Text);
+                FilePath = file.Path.LocalPath;
+                writer.Close();
+            }
             _mainRefreshHandler.RefreshFileInformation(this);
         }
         else

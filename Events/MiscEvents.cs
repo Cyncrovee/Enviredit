@@ -14,12 +14,10 @@ public partial class MainWindow : Window
     }
     private void FileList_OnDoubleTapped(object? sender, TappedEventArgs e)
     {
-        if (FileList.SelectedItem != null)
-        {
-            FilePath = FileList.SelectedItem.ToString();
-            _fileHandler.LoadFile(this);
-            _mainRefreshHandler.RefreshFileInformation(this);
-            MainSettingsHandler.SaveSettings(this);
-        }
+        if (FileList.SelectedItem == null) return;
+        FilePath = FileList.SelectedItem.ToString();
+        _fileHandler.LoadFile(this);
+        _mainRefreshHandler.RefreshFileInformation(this);
+        MainSettingsHandler.SaveSettings(this);
     }
 }

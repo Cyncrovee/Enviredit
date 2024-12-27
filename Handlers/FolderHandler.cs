@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
@@ -19,7 +18,7 @@ public class FolderHandler
 
         if (folder != null)
         {
-            window.FolderPath = folder[0].Path.LocalPath.ToString();
+            window.FolderPath = folder[0].Path.LocalPath;
             Console.WriteLine(window.FolderPath);
         }
         else
