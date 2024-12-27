@@ -30,10 +30,10 @@ public partial class MainWindow : Window
 
         if (file is not null)
         {
+            FilePath = file.Path.LocalPath;
             await using (var writer = new StreamWriter(FilePath))
             {
                 await writer.WriteLineAsync(Editor.Text);
-                FilePath = file.Path.LocalPath;
                 writer.Close();
             }
             _mainRefreshHandler.RefreshFileInformation(this);
