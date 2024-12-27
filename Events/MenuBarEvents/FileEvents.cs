@@ -11,7 +11,7 @@ public partial class MainWindow : Window
 {
     private async void SaveButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (FilePath == String.Empty | FilePath == null)
+        if (FilePath == String.Empty)
         {
             await SaveFileAs();
             RefreshList();
