@@ -21,7 +21,7 @@ public partial class MainWindow : Window
             FolderPath = folder[0].Path.LocalPath;
             Console.WriteLine(FolderPath);
         }
-        catch (OperationCanceledException)
+        catch (Exception e)
         {
             // Pass
         }

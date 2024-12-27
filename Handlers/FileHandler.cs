@@ -60,17 +60,17 @@ public partial class MainWindow : Window
                 Title = "Select File",
                 AllowMultiple = false
             });
-
-            if (file.First() == null) return;
+            
             FilePath = file.First().Path.LocalPath;
         }
-        catch (OperationCanceledException)
+        catch (Exception e)
         {
             // Pass
         }
     }
     private void LoadFile()
     {
+        if (FilePath == String.Empty) return;
         Editor.Clear();
         using (var reader = new StreamReader(FilePath, FileOptions))
         {
