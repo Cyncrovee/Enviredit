@@ -13,3 +13,11 @@ From there run the following command:
 dotnet run
 ```
 This will build and run the project
+
+## Misc Notes:
+If the file hasn't loaded the syntax highlighting correctly, here are some things that might fix it:
+- Typing something
+- Selecting then deselecting the un-highlighted text
+- Scrolling up/down to move the text out of view, then back in view
+
+Apologies for the inconvenience, I am currently unsure what is causing this.
