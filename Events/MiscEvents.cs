@@ -16,8 +16,8 @@ public partial class MainWindow : Window
     {
         if (FileList.SelectedItem == null) return;
         FilePath = FileList.SelectedItem.ToString();
-        _fileHandler.LoadFile(this);
-        _mainRefreshHandler.RefreshFileInformation(this);
-        MainSettingsHandler.SaveSettings(this);
+        LoadFile();
+        RefreshFileInformation();
+        SaveSettings();
     }
 }

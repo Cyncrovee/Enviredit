@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 
-namespace Enviredit.Handlers;
+namespace Enviredit;
 
-public class FolderHandler
+public partial class MainWindow : Window
 {
-    public async Task OpenFolderDialog(MainWindow window)
+    private async Task OpenFolderDialog()
     {
-        var topLevel = TopLevel.GetTopLevel(window);
+        var topLevel = TopLevel.GetTopLevel(this);
         var folder = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
         {
             Title = "Open Folder",
@@ -18,8 +18,8 @@ public class FolderHandler
 
         if (folder != null)
         {
-            window.FolderPath = folder[0].Path.LocalPath;
-            Console.WriteLine(window.FolderPath);
+            FolderPath = folder[0].Path.LocalPath;
+            Console.WriteLine(FolderPath);
         }
         else
         {

@@ -9,15 +9,15 @@ public partial class MainWindow : Window
 {
     private async void OpenFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        await _fileHandler.OpenFileDialog(this);
-        _fileHandler.LoadFile(this);
-        _mainRefreshHandler.RefreshFileInformation(this);
+        await OpenFileDialog();
+        LoadFile();
+        RefreshFileInformation();
     }
     private async void OpenFolderButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        await _folderHandler.OpenFolderDialog(this);
-        _mainRefreshHandler.RefreshList(this);
-        MainSettingsHandler.SaveSettings(this);
+        await OpenFolderDialog();
+        RefreshList();
+        SaveSettings();
     }
     private void SystemThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -26,8 +26,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = false;
 
         RequestedThemeVariant = ThemeVariant.Default;
-        _mainRefreshHandler.RefreshFileInformation(this);
-        MainSettingsHandler.SaveSettings(this);;
+        RefreshFileInformation();
+        SaveSettings();
     }
     private void LightThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -36,8 +36,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = false;
 
         RequestedThemeVariant = ThemeVariant.Light;
-        _mainRefreshHandler.RefreshFileInformation(this);
-        MainSettingsHandler.SaveSettings(this);;
+        RefreshFileInformation();
+        SaveSettings();
     }
     private void DarkThemeItem_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -46,8 +46,8 @@ public partial class MainWindow : Window
         DarkThemeItem.IsChecked = true;
 
         RequestedThemeVariant = ThemeVariant.Dark;
-        _mainRefreshHandler.RefreshFileInformation(this);
-        MainSettingsHandler.SaveSettings(this);;
+        RefreshFileInformation();
+        SaveSettings();
     }
     private void IndentationSizeComboBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {

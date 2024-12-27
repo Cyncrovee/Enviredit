@@ -6,34 +6,34 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 
-namespace Enviredit.Handlers;
+namespace Enviredit;
 
-public class FileHandler
+public partial class MainWindow : Window
 {
     private static readonly FileStreamOptions FileOptions = new()
     {
         Mode = FileMode.Open,
         Access = FileAccess.Read,
     };
-    public async Task OpenFileDialog(MainWindow window)
+    private async Task OpenFileDialog()
     {
-        var topLevel = TopLevel.GetTopLevel(window);
+        var topLevel = TopLevel.GetTopLevel(this);
         var file = await topLevel.StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions
         {
             Title = "Select File",
             AllowMultiple = false
         });
 
-        window.FilePath = file.First().Path.LocalPath;
+        FilePath = file.First().Path.LocalPath;
     }
-    public void LoadFile(MainWindow window)
+    private void LoadFile()
     {
-        window.Editor.Clear();
-        using (var reader = new StreamReader(window.FilePath, FileOptions))
+        Editor.Clear();
+        using (var reader = new StreamReader(FilePath, FileOptions))
         {
-            window.Editor.Document.Text = reader.ReadToEnd();
+            Editor.Document.Text = reader.ReadToEnd();
             reader.Peek();
-            window.Encoding = reader.CurrentEncoding.EncodingName;
+            Encoding = reader.CurrentEncoding.EncodingName;
             reader.Close();
         }
     }

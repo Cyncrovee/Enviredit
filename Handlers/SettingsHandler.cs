@@ -6,113 +6,84 @@ using Avalonia.Controls;
 
 namespace Enviredit;
 
-public class SettingsHandler
+public partial class MainWindow : Window
 {
     // Define JSON options
     private static readonly JsonSerializerOptions JsonWriteOptions = new()
     {
         WriteIndented = true
     };
-    // Define user settings
-    private class UserSettings
-    {
-        // Define theme setting
-        public string? ThemeSetting { get; set; }
-        //Define font family setting
-        public string? FontFamilySetting { get; set; }
-        // Define File settings
-        public string? LastUsedFile { get; set; }
-        public string? LastUsedFolder { get; set; }
-        // Define Edit settings
-        public bool? RectangularEditSetting { get; set; }
-        // Define View settings
-        public bool? ScrollBelowDocumentSetting { get; set; }
-        public bool? RowHighlightSetting { get; set; }
-        public bool? SpacesEditorSetting { get; set; }
-        public bool? TabSpacesEditorSetting { get; set; }
-        public bool? ColumnRulerSetting { get; set; }
-        public bool? EndOfLineSetting { get; set; }
-        public bool? ListViewSetting { get; set; }
-        public bool? LocationBarViewSetting { get; set; }
-        public bool? FileBarViewSetting { get; set; }
-        public bool? FileViewSetting { get; set; }
-        public int? LocationBarSetting { get; set; }
-        public int? FileBarSetting { get; set; }
-        // Define Debug settings
-        public bool? GridLinesSetting { get; set; }
-    }
-    
     
     // Define functions
-    public void GetSettingsFile(MainWindow window)
+    private void GetSettingsFile()
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\");
-            window.SettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
+            SettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.config\\Enviredit\\Enviredit.json";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/");
-            window.SettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
+            SettingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/Enviredit.json";
         }
     }
-    public void SettingsFile(MainWindow window)
+    private void FindSettingsFile()
     {
-        if (File.Exists(window.SettingsFile))
+        if (File.Exists(SettingsFile))
         {
             Console.WriteLine("Settings file found");
-            Console.WriteLine(window.SettingsFile);
+            Console.WriteLine(SettingsFile);
 
         }
         else
         {
             Console.WriteLine("No settings file found, creating a new one...");
-            using FileStream fileStream = File.Open(window.SettingsFile, FileMode.Append);
+            using FileStream fileStream = File.Open(SettingsFile, FileMode.Append);
             using StreamWriter file = new StreamWriter(fileStream);
-            var themeSetting = new MainWindow.UserSettings
+            var themeSetting = new UserSettings
             {
                 ThemeSetting = "Default",
                 RowHighlightSetting = true
             };
             fileStream.Close();
             var jsonString = JsonSerializer.Serialize(themeSetting);
-            using (var writer = new StreamWriter(window.SettingsFile))
+            using (var writer = new StreamWriter(SettingsFile))
             {
                 writer.Write(jsonString);
                 writer.Close();
             }
         }
     }
-    private static string GetTheme(TopLevel topLevel)
+    private static string GetTheme(MainWindow window)
     {
-        return (topLevel.RequestedThemeVariant).ToString();
+        return (window.RequestedThemeVariant).ToString();
     }
-    public void SaveSettings(MainWindow window)
+    private void SaveSettings()
     {
         var userSetting = new UserSettings()
         {
-            ThemeSetting = GetTheme(window),
-            FontFamilySetting = window.Editor.FontFamily.Name,
-            RectangularEditSetting = window.Editor.Options.EnableRectangularSelection,
-            ScrollBelowDocumentSetting = window.Editor.Options.AllowScrollBelowDocument,
-            RowHighlightSetting = window.Editor.Options.HighlightCurrentLine,
-            GridLinesSetting = window.MainGrid.ShowGridLines,
-            LocationBarSetting = window.LocationBar.GetValue(Grid.RowProperty),
-            LocationBarViewSetting = window.LocationBar.IsVisible,
-            FileBarSetting = window.FileBar.GetValue(Grid.RowProperty),
-            FileBarViewSetting = window.FileBar.IsVisible,
-            SpacesEditorSetting = window.Editor.Options.ShowSpaces,
-            TabSpacesEditorSetting = window.Editor.Options.ShowTabs,
-            ColumnRulerSetting = window.Editor.Options.ShowColumnRulers,
-            EndOfLineSetting = window.Editor.Options.ShowEndOfLine,
-            ListViewSetting = window.FileList.IsVisible,
+            ThemeSetting = GetTheme(this),
+            FontFamilySetting = Editor.FontFamily.Name,
+            RectangularEditSetting = Editor.Options.EnableRectangularSelection,
+            ScrollBelowDocumentSetting = Editor.Options.AllowScrollBelowDocument,
+            RowHighlightSetting = Editor.Options.HighlightCurrentLine,
+            GridLinesSetting = MainGrid.ShowGridLines,
+            LocationBarSetting = LocationBar.GetValue(Grid.RowProperty),
+            LocationBarViewSetting = LocationBar.IsVisible,
+            FileBarSetting = FileBar.GetValue(Grid.RowProperty),
+            FileBarViewSetting = FileBar.IsVisible,
+            SpacesEditorSetting = Editor.Options.ShowSpaces,
+            TabSpacesEditorSetting = Editor.Options.ShowTabs,
+            ColumnRulerSetting = Editor.Options.ShowColumnRulers,
+            EndOfLineSetting = Editor.Options.ShowEndOfLine,
+            ListViewSetting = FileList.IsVisible,
 
-            LastUsedFile = window.FilePath,
-            LastUsedFolder = window.FolderPath
+            LastUsedFile = FilePath,
+            LastUsedFolder = FolderPath
         };
         var jsonString = JsonSerializer.Serialize(userSetting, JsonWriteOptions);
-        using (var writer = new StreamWriter(window.SettingsFile))
+        using (var writer = new StreamWriter(SettingsFile))
         {
             writer.Write(jsonString);
             writer.Close();

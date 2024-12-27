@@ -8,6 +8,6 @@ public partial class MainWindow : Window
     private void GridLinesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         MainGrid.ShowGridLines = !MainGrid.ShowGridLines;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
 }

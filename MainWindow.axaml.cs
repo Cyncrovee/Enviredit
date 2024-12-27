@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
 using Avalonia.Media;
-using Enviredit.Handlers;
 
 namespace Enviredit;
 
@@ -131,20 +130,20 @@ public partial class MainWindow : Window
     }
     public string SettingsFile { get; set; }
     private bool IsEditorView { get; set; }
-    public readonly SettingsHandler MainSettingsHandler = new();
-    private readonly RefreshHandler _mainRefreshHandler = new();
-    private readonly FileHandler _fileHandler = new();
-    private readonly FolderHandler _folderHandler = new();
+    //public readonly SettingsHandler MainSettingsHandler = new();
+    //private readonly RefreshHandler _mainRefreshHandler = new();
+    //private readonly FileHandler _fileHandler = new();
+    //private readonly FolderHandler _folderHandler = new();
     public MainWindow()
     {
         InitializeComponent();
 
-        MainSettingsHandler.GetSettingsFile(this);
-        MainSettingsHandler.SettingsFile(this);
+        GetSettingsFile();
+        FindSettingsFile();
 
         // Refresh all settings and checkboxes
-        _mainRefreshHandler.RefreshSettings(this);
-        _mainRefreshHandler.RefreshIsChecked(this);
+        RefreshSettings();
+        RefreshIsChecked();
 
         // Set options for Editor
         Editor.Options.EnableRectangularSelection = true;
@@ -167,6 +166,6 @@ public partial class MainWindow : Window
     {
         if (FontFamilyComboBox.SelectedItem == null) return;
         Editor.FontFamily = FontFamily.Parse(FontFamilyComboBox.SelectedItem.ToString());
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
 }

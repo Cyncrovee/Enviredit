@@ -55,32 +55,32 @@ public partial class MainWindow : Window
     private void ScrollBelowDocument_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.AllowScrollBelowDocument = !Editor.Options.AllowScrollBelowDocument;
-        MainSettingsHandler.SaveSettings(this);
+        SaveSettings();
     }
     private void HighlightRowButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.HighlightCurrentLine = !Editor.Options.HighlightCurrentLine;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     private void SpacesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowSpaces = !Editor.Options.ShowSpaces;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     private void TabSpacesButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowTabs = !Editor.Options.ShowTabs;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     private void ColumnRulerButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowColumnRulers = !Editor.Options.ShowColumnRulers;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     private void EndOfLineButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.ShowEndOfLine = !Editor.Options.ShowEndOfLine;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     private void ListViewButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -95,7 +95,7 @@ public partial class MainWindow : Window
                 Editor.SetValue(Grid.ColumnSpanProperty, 1);
                 break;
         }
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     /*private void ListMoveButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -117,7 +117,7 @@ public partial class MainWindow : Window
     {
         LocationBar.IsVisible = !LocationBar.IsVisible;
         FileBar.IsVisible = !FileBar.IsVisible;
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
     private void MoveStatusBarButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -139,6 +139,6 @@ public partial class MainWindow : Window
                 FileBar.SetValue(Grid.RowProperty, 5);
                 break;
         }
-        MainSettingsHandler.SaveSettings(this);;
+        SaveSettings();
     }
 }

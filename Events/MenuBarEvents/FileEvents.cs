@@ -36,7 +36,7 @@ public partial class MainWindow : Window
                 await writer.WriteLineAsync(Editor.Text);
                 writer.Close();
             }
-            _mainRefreshHandler.RefreshFileInformation(this);
+            RefreshFileInformation();
         }
         else
         {
@@ -49,7 +49,7 @@ public partial class MainWindow : Window
         FileInfo fileInfo = new FileInfo(FilePath);
         var directoryPath = fileInfo.Directory;
         FolderPath = directoryPath.FullName;
-        _mainRefreshHandler.RefreshList(this);
+        RefreshList();
     }
     private void LastFolderButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -57,7 +57,7 @@ public partial class MainWindow : Window
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         if (userSettings.LastUsedFolder == null) return;
         FolderPath = userSettings.LastUsedFolder;
-        _mainRefreshHandler.RefreshList(this);
+        RefreshList();
     }
     private void LastFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -67,9 +67,9 @@ public partial class MainWindow : Window
         var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         if (userSettings.LastUsedFile == null) return;
         FilePath = userSettings.LastUsedFile;
-        _fileHandler.LoadFile(this);
-        _mainRefreshHandler.RefreshFileInformation(this);
-        MainSettingsHandler.SaveSettings(this);
+        LoadFile();
+        RefreshFileInformation();
+        SaveSettings();
         
     }
     private void ExitFileFolder_OnClick(object? sender, RoutedEventArgs e)
@@ -88,7 +88,7 @@ public partial class MainWindow : Window
     }
     private void Exit(object? sender, RoutedEventArgs e)
     {
-        MainSettingsHandler.SaveSettings(this);;
-        this.Close();
+        SaveSettings();
+        Close();
     }
 }

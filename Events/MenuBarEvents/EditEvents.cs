@@ -77,6 +77,6 @@ public partial class MainWindow : Window
     private void ToggleRectangularSelectionButton_OnClick(object? sender, RoutedEventArgs e)
     {
         Editor.Options.EnableRectangularSelection = !Editor.Options.EnableRectangularSelection;
-        MainSettingsHandler.SaveSettings(this);
+        SaveSettings();
     }
 }

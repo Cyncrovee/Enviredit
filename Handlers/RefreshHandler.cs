@@ -5,35 +5,33 @@ using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Styling;
-using AvaloniaEdit;
 using AvaloniaEdit.TextMate;
-using Enviredit.Handlers;
 using TextMateSharp.Grammars;
 
 namespace Enviredit;
 
-public class RefreshHandler
+public partial class MainWindow : Window
 {
     private readonly RegistryOptions _darkModeOption = new(ThemeName.DarkPlus);
     private readonly RegistryOptions _lightModeOption = new(ThemeName.LightPlus);
-    public void RefreshSettings(MainWindow window)
+    private void RefreshSettings()
     {
-        var jsonString = File.ReadAllText(window.SettingsFile);
-        var userSettings = JsonSerializer.Deserialize<MainWindow.UserSettings>(jsonString);
+        var jsonString = File.ReadAllText(SettingsFile);
+        var userSettings = JsonSerializer.Deserialize<UserSettings>(jsonString);
         // Refresh theme setting
         switch (userSettings.ThemeSetting)
         {
             case null:
-                window.RequestedThemeVariant = ThemeVariant.Default;
+                RequestedThemeVariant = ThemeVariant.Default;
                 break;
             case "Default":
-                window.RequestedThemeVariant = ThemeVariant.Default;
+                RequestedThemeVariant = ThemeVariant.Default;
                 break;
             case "Light":
-                window.RequestedThemeVariant = ThemeVariant.Light;
+                RequestedThemeVariant = ThemeVariant.Light;
                 break;
             case "Dark":
-                window.RequestedThemeVariant = ThemeVariant.Dark;
+                RequestedThemeVariant = ThemeVariant.Dark;
                 break;
         }
         // Refresh font family setting
@@ -47,8 +45,8 @@ public class RefreshHandler
                     if (fontResult)
                     {
                         Console.WriteLine("Font family found: " + fontFamily.Name);
-                        window.Editor.FontFamily = userSettings.FontFamilySetting;
-                        window.FontFamilyComboBox.PlaceholderText = fontFamily.Name;
+                        Editor.FontFamily = userSettings.FontFamilySetting;
+                        FontFamilyComboBox.PlaceholderText = fontFamily.Name;
                         break;
                     }
                     else
@@ -64,85 +62,85 @@ public class RefreshHandler
         switch (userSettings.RectangularEditSetting)
         {
             default:
-                window.Editor.Options.EnableRectangularSelection = userSettings.RectangularEditSetting.Value;
+                Editor.Options.EnableRectangularSelection = userSettings.RectangularEditSetting.Value;
                 break;
             case null:
-                window.Editor.Options.EnableRectangularSelection = true;
+                Editor.Options.EnableRectangularSelection = true;
                 break;
         }
         // View
         switch (userSettings.ScrollBelowDocumentSetting)
         {
             default:
-                window.Editor.Options.AllowScrollBelowDocument = userSettings.ScrollBelowDocumentSetting.Value;
+                Editor.Options.AllowScrollBelowDocument = userSettings.ScrollBelowDocumentSetting.Value;
                 break;
             case null:
-                window.Editor.Options.AllowScrollBelowDocument = true;
+                Editor.Options.AllowScrollBelowDocument = true;
                 break;
                 
         }
         switch (userSettings.RowHighlightSetting)
         {
             default:
-                window.Editor.Options.HighlightCurrentLine = userSettings.RowHighlightSetting.Value;
+                Editor.Options.HighlightCurrentLine = userSettings.RowHighlightSetting.Value;
                 break;
             case null:
-                window.Editor.Options.HighlightCurrentLine = true;
+                Editor.Options.HighlightCurrentLine = true;
                 break;
         }
         switch (userSettings.SpacesEditorSetting)
         {
             default:
-                window.Editor.Options.ShowSpaces = userSettings.SpacesEditorSetting.Value;
+                Editor.Options.ShowSpaces = userSettings.SpacesEditorSetting.Value;
                 break;
             case null:
-                window.Editor.Options.ShowSpaces = false;
+                Editor.Options.ShowSpaces = false;
                 break;
         }
         switch (userSettings.TabSpacesEditorSetting)
         {
             default:
-                window.Editor.Options.ShowTabs = userSettings.TabSpacesEditorSetting.Value;
+                Editor.Options.ShowTabs = userSettings.TabSpacesEditorSetting.Value;
                 break;
             case null:
-                window.Editor.Options.ShowTabs = false;
+                Editor.Options.ShowTabs = false;
                 break;
         }
         switch (userSettings.ColumnRulerSetting)
         {
             default:
-                window.Editor.Options.ShowColumnRulers = userSettings.ColumnRulerSetting.Value;
+                Editor.Options.ShowColumnRulers = userSettings.ColumnRulerSetting.Value;
                 break;
             case null:
-                window.Editor.Options.ShowColumnRulers = false;
+                Editor.Options.ShowColumnRulers = false;
                 break;
         }
         switch (userSettings.EndOfLineSetting)
         {
             default:
-                window.Editor.Options.ShowEndOfLine = userSettings.EndOfLineSetting.Value;
+                Editor.Options.ShowEndOfLine = userSettings.EndOfLineSetting.Value;
                 break;
             case null:
-                window.Editor.Options.ShowEndOfLine = false;
+                Editor.Options.ShowEndOfLine = false;
                 break;
         }
         switch (userSettings.ListViewSetting)
         {
             case null:
-                window.FileList.IsVisible = true;
+                FileList.IsVisible = true;
                 break;
             case true:
-                window.FileList.IsVisible = true;
+                FileList.IsVisible = true;
                 break;
             case false:
-                window.FileList.IsVisible = false;
-                switch (window.Editor.GetValue(Grid.ColumnSpanProperty))
+                FileList.IsVisible = false;
+                switch (Editor.GetValue(Grid.ColumnSpanProperty))
                 {
                     case 1:
-                        window.Editor.SetValue(Grid.ColumnSpanProperty, 2);
+                        Editor.SetValue(Grid.ColumnSpanProperty, 2);
                         break;
                     case 2:
-                        window.Editor.SetValue(Grid.ColumnSpanProperty, 1);
+                        Editor.SetValue(Grid.ColumnSpanProperty, 1);
                         break;
                 }
                 break;
@@ -150,96 +148,92 @@ public class RefreshHandler
         switch (userSettings.LocationBarViewSetting)
         {
             default:
-                window.LocationBar.IsVisible = userSettings.LocationBarViewSetting.Value;
+                LocationBar.IsVisible = userSettings.LocationBarViewSetting.Value;
                 break;
             case null:
-                window.LocationBar.IsVisible = true;
+                LocationBar.IsVisible = true;
                 break;
         }
         switch (userSettings.FileBarViewSetting)
         {
             default:
-                window.FileBar.IsVisible = userSettings.FileBarViewSetting.Value;
+                FileBar.IsVisible = userSettings.FileBarViewSetting.Value;
                 break;
             case null:
-                window.FileBar.IsVisible = true;
+                FileBar.IsVisible = true;
                 break;
         }
         switch (userSettings.LocationBarSetting)
         {
             default:
-                window.LocationBar.SetValue(Grid.RowProperty, userSettings.LocationBarSetting);
+                LocationBar.SetValue(Grid.RowProperty, userSettings.LocationBarSetting);
                 break;
             case null:
-                window.LocationBar.SetValue(Grid.RowProperty, 5);
+                LocationBar.SetValue(Grid.RowProperty, 5);
                 break;
         }
         switch (userSettings.FileBarSetting)
         {
             default:
-                window.FileBar.SetValue(Grid.RowProperty, userSettings.FileBarSetting);
+                FileBar.SetValue(Grid.RowProperty, userSettings.FileBarSetting);
                 break;
             case null:
-                window.FileBar.SetValue(Grid.RowProperty, 5);
+                FileBar.SetValue(Grid.RowProperty, 5);
                 break;
         }
         // Debug
         switch (userSettings.GridLinesSetting)
         {
             default:
-                window.MainGrid.ShowGridLines = userSettings.GridLinesSetting.Value;
+                MainGrid.ShowGridLines = userSettings.GridLinesSetting.Value;
                 break;
             case null:
-                window.MainGrid.ShowGridLines = false;
+                MainGrid.ShowGridLines = false;
                 break;
         }
     }
-    private static string GetTheme(TopLevel topLevel)
-    {
-        return (topLevel.RequestedThemeVariant).ToString();
-    }
-    public void RefreshIsChecked(MainWindow window)
+    private void RefreshIsChecked()
     {
         // Refresh theme setting checkbox
-        switch (GetTheme(window))
+        switch (GetTheme(this))
         {
             case "Default":
-                window.SystemThemeItem.IsChecked = true;
-                window.DarkThemeItem.IsChecked = false;
-                window.LightThemeItem.IsChecked = false;
+                SystemThemeItem.IsChecked = true;
+                DarkThemeItem.IsChecked = false;
+                LightThemeItem.IsChecked = false;
                 break;
             case "Dark":
-                window.SystemThemeItem.IsChecked = false;
-                window.DarkThemeItem.IsChecked = true;
-                window.LightThemeItem.IsChecked = false;
+                SystemThemeItem.IsChecked = false;
+                DarkThemeItem.IsChecked = true;
+                LightThemeItem.IsChecked = false;
                 break;
             case "Light":
-                window.SystemThemeItem.IsChecked = false;
-                window.DarkThemeItem.IsChecked = false;
-                window.LightThemeItem.IsChecked = true;
+                SystemThemeItem.IsChecked = false;
+                DarkThemeItem.IsChecked = false;
+                LightThemeItem.IsChecked = true;
                 break;
         }
         // Refresh View settings checkboxes
-        switch (window.LocationBar.IsVisible, window.FileBar.IsVisible)
+        switch (LocationBar.IsVisible, FileBar.IsVisible)
         {
             case (true, true):
-                window.ViewStatusBarButton.IsChecked = true;
+                ViewStatusBarButton.IsChecked = true;
                 break;
             case (false, false):
-                window.ViewStatusBarButton.IsChecked = false;
+                ViewStatusBarButton.IsChecked = false;
                 break;
         }
     }
-    public void RefreshList(MainWindow window)
+    private void RefreshList()
     {
-        if (window.FolderPath != string.Empty)
+        if (FolderPath != string.Empty)
         {
-            string[] files = Directory.GetFiles(window.FolderPath);
+            string[] files = Directory.GetFiles(FolderPath);
 
-            window.FileList.Items.Clear();
+            FileList.Items.Clear();
             foreach (string file in files)
             {
-                window.FileList.Items.Add(file);
+                FileList.Items.Add(file);
             }
         }
         else
@@ -247,44 +241,43 @@ public class RefreshHandler
             Console.WriteLine("No folder selected");
         }
     }
-    public void RefreshFileInformation(MainWindow window)
+    private void RefreshFileInformation()
     {
         try
         {
-            var textEditor = window.FindControl<TextEditor>("Editor");
-            if (window.ActualThemeVariant == ThemeVariant.Default)
+            if (ActualThemeVariant == ThemeVariant.Default)
             {
                 var registryOptions = _darkModeOption;
-                var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
+                var textMateInstallation = Editor.InstallTextMate(registryOptions);
+                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
 
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                window.Language = languageExtension.ToUpper();
+                Language = languageExtension.ToUpper();
             }
-            else if (window.ActualThemeVariant == ThemeVariant.Light)
+            else if (ActualThemeVariant == ThemeVariant.Light)
             {
                 var registryOptions = _lightModeOption;
-                var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
+                var textMateInstallation = Editor.InstallTextMate(registryOptions);
+                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
 
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                window.Language = languageExtension.ToUpper();
+                Language = languageExtension.ToUpper();
             }
-            else if (window.ActualThemeVariant == ThemeVariant.Dark)
+            else if (ActualThemeVariant == ThemeVariant.Dark)
             {
                 var registryOptions = _darkModeOption;
-                var textMateInstallation = textEditor.InstallTextMate(registryOptions);
-                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(window.FilePath)).Id;
+                var textMateInstallation = Editor.InstallTextMate(registryOptions);
+                string languageExtension = registryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
 
                 textMateInstallation.SetGrammar(registryOptions.GetScopeByLanguageId(languageExtension));
-                window.Language = languageExtension.ToUpper();
+                Language = languageExtension.ToUpper();
             }
         }
         catch (Exception)
         {
-            window.LanguageStatusText.Text= ("Language: " + "Language Not Found");
+            LanguageStatusText.Text= ("Language: " + "Language Not Found");
             Console.WriteLine("Not a Programming Language/Language Not Supported/ No file selected");
         }
-        window.Extension = Path.GetExtension(window.FilePath);
+        Extension = Path.GetExtension(FilePath);
     }
 }
