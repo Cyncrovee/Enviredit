@@ -104,7 +104,7 @@
             </Button.Flyout>
         </Button>
 
-        <TreeView x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="1" Grid.Row="4" Grid.RowSpan="2"/>
+        <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Grid.RowSpan="2"/>
         <avaloniaEdit:TextEditor x:Name="Editor" ShowLineNumbers="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="1">
             <avaloniaEdit:TextEditor.ContextFlyout>
                 <MenuFlyout>

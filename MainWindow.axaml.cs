@@ -169,7 +169,7 @@ public partial class MainWindow : Window
 
         // Add indentation sizes to IndentationSizeComboBox
         int[] indentationSizes = Enumerable.Range(1, 64).ToArray();
-        foreach (var  indentationSize in indentationSizes)
+        foreach (var indentationSize in indentationSizes)
         {
             IndentationSizeComboBox.Items.Add(indentationSize);
         }
