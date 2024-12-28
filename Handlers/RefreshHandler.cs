@@ -256,10 +256,21 @@ public partial class MainWindow : Window
             {
                 _mainRegistryOptions.LoadTheme(ThemeName.DarkPlus);
             }
-            string languageExtension = _mainRegistryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
-            MainInstallation = Editor.InstallTextMate(_mainRegistryOptions);
-            MainInstallation.SetGrammar(_mainRegistryOptions.GetScopeByLanguageId(languageExtension));
-            Language = languageExtension.ToUpper();
+            if (FilePath != String.Empty)
+            {
+                Console.WriteLine("Main Grammar");
+                string languageExtension = _mainRegistryOptions.GetLanguageByExtension(Path.GetExtension(FilePath)).Id;
+                MainInstallation = Editor.InstallTextMate(_mainRegistryOptions);
+                MainInstallation.SetGrammar(_mainRegistryOptions.GetScopeByLanguageId(languageExtension));
+                Language = languageExtension.ToUpper();
+            }
+            else if (FilePath == String.Empty)
+            {
+                Console.WriteLine("Default Grammar");
+                MainInstallation = Editor.InstallTextMate(_mainRegistryOptions);
+                MainInstallation.SetGrammar(_mainRegistryOptions.GetScopeByLanguageId(".txt"));
+                Language = "Language not found";
+            }
         }
         catch (NullReferenceException)
         {

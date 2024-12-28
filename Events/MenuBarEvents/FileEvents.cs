@@ -56,20 +56,22 @@ public partial class MainWindow : Window
         SaveSettings();
         
     }
-    private void ExitFileFolder_OnClick(object? sender, RoutedEventArgs e)
+    private void ExitFile_OnClick(object? sender, RoutedEventArgs e)
     {
         FilePath = String.Empty;
-        FolderPath = String.Empty;
-
         Encoding = String.Empty;
         Extension = String.Empty;
         Language = String.Empty;
-
-        FileList.Items.Clear();
-        RefreshFileInformation();
+        
         Editor.TextArea.Caret.Column = 1;
         Editor.TextArea.Caret.Line = 1;
         Editor.Clear();
+        RefreshFileInformation();
+    }
+    private void ExitFolder_OnClick(object? sender, RoutedEventArgs e)
+    {
+        FolderPath = String.Empty;
+        FileList.Items.Clear();
     }
     private void Exit(object? sender, RoutedEventArgs e)
     {
