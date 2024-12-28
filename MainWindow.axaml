@@ -20,7 +20,8 @@
                 <Separator/>
                 <MenuItem x:Name="LastFileButton" Click="LastFileButton_OnClick" Header="Fetch Last Used File"/>
                 <MenuItem x:Name="LastFolderButton" Click="LastFolderButton_OnClick" Header="Fetch Last Used Folder"/>
-                <MenuItem Click="ExitFileFolder_OnClick" Header="Exit File/Folder"/>
+                <MenuItem Click="ExitFile_OnClick" Header="Exit File"/>
+                <MenuItem Click="ExitFolder_OnClick" Header="Exit Folder"/>
                 <Separator/>
                 <MenuItem Click="Exit" Header="Exit" InputGesture="Alt+F4"/>
             </MenuItem>
