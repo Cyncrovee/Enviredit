@@ -96,8 +96,7 @@
                         <MenuItem x:Name="DarkThemeItem" Click="DarkThemeItem_OnClick" Header="Dark Theme" ToggleType="CheckBox" FlowDirection="LeftToRight"/>
                     </MenuItem>
                     <MenuItem Header="Indentation Size" FlowDirection="RightToLeft">
-                        <TextBlock Text="{Binding #Editor.Options.IndentationSize, StringFormat='Current: {0}'}"/>
-                        <ComboBox x:Name="IndentationSizeComboBox" SelectionChanged="IndentationSizeComboBox_OnSelectionChanged" FlowDirection="LeftToRight"/>
+                        <ComboBox x:Name="IndentationSizeComboBox" PlaceholderText="{Binding #Editor.Options.IndentationSize}" SelectionChanged="IndentationSizeComboBox_OnSelectionChanged" FlowDirection="LeftToRight"/>
                     </MenuItem>
                     <MenuItem Header="Editor Font Family" FlowDirection="RightToLeft">
                         <ComboBox x:Name="FontFamilyComboBox" SelectionChanged="FontFamilyComboBox_OnSelectionChanged" FlowDirection="LeftToRight"/>
