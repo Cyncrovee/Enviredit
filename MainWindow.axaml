@@ -101,12 +101,30 @@
                     <MenuItem Header="Editor Font Family" FlowDirection="RightToLeft">
                         <ComboBox x:Name="FontFamilyComboBox" SelectionChanged="FontFamilyComboBox_OnSelectionChanged" FlowDirection="LeftToRight"/>
                     </MenuItem>
+                    <MenuItem Header="Scrollbar Settings" FlowDirection="RightToLeft">
+                        <MenuItem Header="Vertical Scrollbar Visibility" FlowDirection="RightToLeft">
+                            <ComboBox x:Name="VScrollBox" SelectionChanged="VScrollBox_OnSelectionChanged" PlaceholderText="{Binding #Editor.VerticalScrollBarVisibility}" FlowDirection="RightToLeft">
+                                <ComboBoxItem Content="Visible"/>
+                                <ComboBoxItem Content="Auto"/>
+                                <ComboBoxItem Content="Hidden"/>
+                                <ComboBoxItem Content="Disabled"/>
+                            </ComboBox>
+                        </MenuItem>
+                        <MenuItem Header="Horizontal Scrollbar Visibility" FlowDirection="RightToLeft">
+                            <ComboBox x:Name="HScrollBox" SelectionChanged="HScrollBox_OnSelectionChanged" PlaceholderText="{Binding #Editor.HorizontalScrollBarVisibility}" FlowDirection="RightToLeft">
+                                <ComboBoxItem Content="Visible"/>
+                                <ComboBoxItem Content="Auto"/>
+                                <ComboBoxItem Content="Hidden"/>
+                                <ComboBoxItem Content="Disabled"/>
+                            </ComboBox>
+                        </MenuItem>
+                    </MenuItem>
                 </MenuFlyout>
             </Button.Flyout>
         </Button>
 
         <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Grid.RowSpan="2"/>
-        <avaloniaEdit:TextEditor x:Name="Editor" ShowLineNumbers="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="1">
+        <avaloniaEdit:TextEditor x:Name="Editor" ShowLineNumbers="True" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="1">
             <avaloniaEdit:TextEditor.ContextFlyout>
                 <MenuFlyout>
                     <MenuItem Click="Cut" Header="Cut" InputGesture="CTRL+X"/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 
 namespace Enviredit;
@@ -18,6 +19,44 @@ public partial class MainWindow : Window
         FilePath = FileList.SelectedItem.ToString();
         LoadFile();
         RefreshFileInformation();
+        SaveSettings();
+    }
+    private void VScrollBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        switch (VScrollBox.SelectedIndex)
+        {
+            case 0:
+                Editor.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+                break;
+            case 1:
+                Editor.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+                break;
+            case 2:
+                Editor.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                break;
+            case 3:
+                Editor.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                break;
+        }
+        SaveSettings();
+    }
+    private void HScrollBox_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        switch (HScrollBox.SelectedIndex)
+        {
+            case 0:
+                Editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Visible;
+                break;
+            case 1:
+                Editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                break;
+            case 2:
+                Editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                break;
+            case 3:
+                Editor.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                break;
+        }
         SaveSettings();
     }
 }

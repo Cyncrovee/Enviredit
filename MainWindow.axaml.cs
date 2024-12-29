@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit.TextMate;
@@ -107,8 +108,11 @@ public partial class MainWindow : Window
     {
         // Define theme setting
         public string? ThemeSetting { get; init; }
-        //Define font family setting
+        // Define font family setting
         public string? FontFamilySetting { get; init; }
+        // Define scrollbar settings
+        public ScrollBarVisibility VScrollViewSetting { get; init; }
+        public ScrollBarVisibility HScrollViewSetting { get; init; }
         // Define MenuBar settings
         // Define File settings
         public string? LastUsedFile { get; init; }

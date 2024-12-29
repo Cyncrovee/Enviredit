@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Styling;
 using AvaloniaEdit.TextMate;
@@ -54,6 +55,23 @@ public partial class MainWindow : Window
                 }
                 Console.WriteLine("Not found " + notFoundFonts.Count + " fonts");
                 break;
+        }
+        // Refresh scrollbar settings
+        try
+        {
+            Editor.VerticalScrollBarVisibility = userSettings.VScrollViewSetting;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        try
+        {
+            Editor.HorizontalScrollBarVisibility = userSettings.HScrollViewSetting;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
         }
         // Refresh MenuBar settings
         // Edit

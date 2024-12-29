@@ -65,6 +65,8 @@ public partial class MainWindow : Window
         {
             ThemeSetting = GetTheme(this),
             FontFamilySetting = Editor.FontFamily.Name,
+            VScrollViewSetting = Editor.VerticalScrollBarVisibility,
+            HScrollViewSetting = Editor.HorizontalScrollBarVisibility,
             RectangularEditSetting = Editor.Options.EnableRectangularSelection,
             ScrollBelowDocumentSetting = Editor.Options.AllowScrollBelowDocument,
             RowHighlightSetting = Editor.Options.HighlightCurrentLine,
