@@ -1,0 +1,83 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Enviredit.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Enviredit.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Enviredit">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="ListBox.fileList">
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+        <Style Selector="MenuItem.topMenu">
+            <Setter Property="CornerRadius" Value="0, 0, 3, 3"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid x:Name="MainGrid" ColumnDefinitions="200, *" RowDefinitions="30, *">
+        <Menu Grid.Column="0" Grid.Row="0" DockPanel.Dock="Top">
+            <!-- FILE -->
+            <MenuItem Classes="topMenu" Header="File">
+                <MenuItem Click="Open_OnClick" Header="Open" InputGesture="Ctrl+o" HotKey="Ctrl+o"/>
+                <MenuItem Click="OpenFolder_OnClick" Header="Open Folder"/>
+                <Separator/>
+                <MenuItem Click="Save_OnClick" Header="Save" InputGesture="Ctrl+s" HotKey="Ctrl+s"/>
+                <MenuItem Header="Save As"/>
+            </MenuItem>
+            <!-- EDIT -->
+            <MenuItem Classes="topMenu" Header="Edit">
+                <MenuItem Click="Undo_OnClick" Header="Undo" InputGesture="Ctrl+z"/>
+                <MenuItem Click="Redo_OnClick" Header="Redo" InputGesture="Ctrl+y"/>
+                <Separator/>
+                <MenuItem Click="CutText_OnClick" Header="Cut" InputGesture="Ctrl+x"/>
+                <MenuItem Click="CopyText_OnClick" Header="Copy" InputGesture="Ctrl+c"/>
+                <MenuItem Click="PasteText_OnClick" Header="Paste" InputGesture="Ctrl+v"/>
+                <Separator/>
+                <MenuItem Click="DeleteText_OnClick" Header="Delete"/>
+                <MenuItem Click="SelectAll_OnClick" Header="Select All"/>
+                <Separator/>
+                <MenuItem Click="Find_OnClick" Header="Find"/>
+                <MenuItem Click="FindReplace_OnClick" Header="Find and Replace"/>
+                <MenuItem Click="CloseFindPanel_OnClick" Header="Close Find Panel"/>
+                <Separator/>
+                <MenuItem Header="Copy...">
+                    <MenuItem Click="CopyFolder_OnClick" Header="Copy Current Folder Path"/>
+                    <MenuItem Click="CopyFile_OnClick" Header="Copy Current File Path"/>
+                </MenuItem>
+                <MenuItem Header="Change Selected Text Case...">
+                    <MenuItem Click="ToUpperCase_OnClick" Header="To Upper Case"/>
+                    <MenuItem Click="ToLowerCase_OnClick" Header="To Lower Case"/>
+                </MenuItem>
+            </MenuItem>
+            <!-- VIEW -->
+            <MenuItem Classes="topMenu" Header="View">
+                <MenuItem Header="Editor">
+                    <MenuItem Click="HighlightLine_OnClick" Header="Highlight Line" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.HighlightCurrentLine }"/>
+                    <MenuItem Click="ShowSpaces_OnClick" Header="Show Spaces" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ShowSpaces }"/>
+                    <MenuItem Click="ShowTabs_OnClick" Header="Show Tabs" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ShowTabs }"/>
+                    <MenuItem Click="ConvertTabs_OnClick" Header="Convert Tabs To Spaces" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ConvertTabsToSpaces }"/>
+                </MenuItem>
+                <MenuItem Header="Vertical Scrollbar Visibility">
+                    <ComboBox x:Name="VBarOptions" SelectionChanged="VBarOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.VerticalScrollBarVisibility }"/>
+                </MenuItem>
+                <MenuItem Header="Horizontal Scrollbar Visibility">
+                    <ComboBox x:Name="HBarOptions" SelectionChanged="HBarOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.HorizontalScrollBarVisibility }"/>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Click="ShowGridLines_OnClick" Header="Grid Lines" ToggleType="CheckBox" IsChecked="{ Binding #MainGrid.ShowGridLines }"/>
+            </MenuItem>
+        </Menu>
+        <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="0" Grid.Row="1" Classes="fileList" MinWidth="200" MaxWidth="200" HorizontalAlignment="Left" Margin="5,5,5,5"/>
+        <AvaloniaEdit:TextEditor Grid.Column="1" Grid.Row="1" x:Name="Editor" ShowLineNumbers="True" HorizontalAlignment="Stretch"/>
+    </Grid>
+</Window>
