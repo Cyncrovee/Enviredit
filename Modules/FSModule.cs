@@ -10,18 +10,14 @@ public partial class MainWindow : Window
     private async void OpenFile()
     {
         Editor.Clear();
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        using StreamReader reader = new StreamReader(vm.CurrentFile);
+        using StreamReader reader = new StreamReader(LocalGetCurrentFile());
         string content = await reader.ReadToEndAsync();
         Editor.Document.Text = content;
     }
     private void PopulateFileList()
     {
         FileList.Items.Clear();
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        foreach (var file in Directory.GetFiles(vm.CurrentFolder))
+        foreach (var file in Directory.GetFiles(LocalGetCurrentFolder()))
         {
             var name = Path.GetFileName(file);
             FileList.Items.Add(name);

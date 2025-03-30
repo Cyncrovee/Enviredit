@@ -11,7 +11,7 @@ public partial class MainWindow : Window
     {
         if (FileList.SelectedItem == null) return;
         LocalSetCurrentFile((string)FileList.SelectedItem);
-        LocalSetCurrentFile(LocalGetCurrentFolder() + Path.DirectorySeparatorChar + LocalGetCurrentFolder());
+        LocalSetCurrentFile(LocalGetCurrentFolder() + Path.DirectorySeparatorChar + LocalGetCurrentFile());
         OpenFile();
     }
 }
