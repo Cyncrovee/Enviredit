@@ -10,10 +10,8 @@ public partial class MainWindow : Window
     private void FileList_OnDoubleTapped(object? sender, RoutedEventArgs e)
     {
         if (FileList.SelectedItem == null) return;
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        vm.CurrentFile = (string)FileList.SelectedItem;
-        vm.CurrentFile = vm.CurrentFolder + Path.DirectorySeparatorChar + vm.CurrentFile;
+        LocalSetCurrentFile((string)FileList.SelectedItem);
+        LocalSetCurrentFile(LocalGetCurrentFolder() + Path.DirectorySeparatorChar + LocalGetCurrentFolder());
         OpenFile();
     }
 }

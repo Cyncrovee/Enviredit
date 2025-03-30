@@ -25,7 +25,7 @@
     </Window.Styles>
 
     <Grid x:Name="MainGrid" ColumnDefinitions="200, *" RowDefinitions="30, *">
-        <Menu Grid.Column="0" Grid.Row="0" DockPanel.Dock="Top">
+        <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" DockPanel.Dock="Top">
             <!-- FILE -->
             <MenuItem Classes="topMenu" Header="File">
                 <MenuItem Click="Open_OnClick" Header="Open" InputGesture="Ctrl+o" HotKey="Ctrl+o"/>
@@ -76,6 +76,7 @@
                 <Separator/>
                 <MenuItem Click="ShowGridLines_OnClick" Header="Grid Lines" ToggleType="CheckBox" IsChecked="{ Binding #MainGrid.ShowGridLines }"/>
             </MenuItem>
+            <MenuItem Classes="topMenu" Header="Load Settings" Click="ManualLoadSettings_OnClick"/>
         </Menu>
         <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="0" Grid.Row="1" Classes="fileList" MinWidth="200" MaxWidth="200" HorizontalAlignment="Left" Margin="5,5,5,5"/>
         <AvaloniaEdit:TextEditor Grid.Column="1" Grid.Row="1" x:Name="Editor" ShowLineNumbers="True" HorizontalAlignment="Stretch"/>
