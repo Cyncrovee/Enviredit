@@ -5,8 +5,6 @@ namespace Enviredit.Views;
 
 public partial class MainWindow : Window
 {
-    public string CurrentFile { get; set; } = string.Empty;
-    public string CurrentFolder { get; set; } = string.Empty;
     public MainWindow()
     {
         InitializeComponent();

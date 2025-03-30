@@ -1,8 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Enviredit.ViewModels;
 
 namespace Enviredit.Views;
 
@@ -15,6 +17,8 @@ public partial class MainWindow : Window
     //////////
     private async void Open_OnClick(object? sender, RoutedEventArgs e)
     {
+        var vm = (DataContext as MainWindowViewModel);
+        if (vm == null) return;
         var file = await StorageProvider.OpenFilePickerAsync(new FilePickerOpenOptions()
         {
             Title = "Select File to Open",
@@ -23,11 +27,13 @@ public partial class MainWindow : Window
         if (file.Count == 0) return;
         var selectedFile = file[0].TryGetLocalPath();
         if (selectedFile == null) return;
-        CurrentFile = selectedFile;
+        vm.CurrentFile = selectedFile;
         OpenFile();
     }
     private async void OpenFolder_OnClick(object? sender, RoutedEventArgs e)
     {
+        var vm = (DataContext as MainWindowViewModel);
+        if (vm == null) return;
         var folder = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions()
         {
             Title = "Select File to Open",
@@ -36,13 +42,16 @@ public partial class MainWindow : Window
         );
         if (folder.Count == 0) return;
         if (folder[0] == null) return;
-        CurrentFolder = folder[0].TryGetLocalPath();
+        vm.CurrentFolder = folder[0].TryGetLocalPath();
+        Console.WriteLine(vm.CurrentFolder);
         PopulateFileList();
     }
     private void Save_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (CurrentFile == string.Empty) return;
-        using StreamWriter writer = new StreamWriter(CurrentFile);
+        var vm = (DataContext as MainWindowViewModel);
+        if (vm == null) return;
+        if (vm.CurrentFile == string.Empty) return;
+        using StreamWriter writer = new StreamWriter(vm.CurrentFile);
         foreach (var content in Editor.Document.Text)
         {
             writer.WriteAsync(content);
@@ -104,15 +113,19 @@ public partial class MainWindow : Window
     // Copy file/folder path to the clipboard (unless clipboard is null)
     private async void CopyFile_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (CurrentFile == string.Empty) return;
+        var vm = (DataContext as MainWindowViewModel);
+        if (vm == null) return;
+        if (vm.CurrentFile == string.Empty) return;
         if (Clipboard == null) return;
-        await Clipboard.SetTextAsync(CurrentFile);
+        await Clipboard.SetTextAsync(vm.CurrentFile);
     }
     private async void CopyFolder_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (CurrentFolder == string.Empty) return;
+        var vm = (DataContext as MainWindowViewModel);
+        if (vm == null) return;
+        if (vm.CurrentFolder == string.Empty) return;
         if (Clipboard == null) return;
-        await Clipboard.SetTextAsync(CurrentFolder);
+        await Clipboard.SetTextAsync(vm.CurrentFolder);
     }
     // Change selected text to uppercase/lowercase
     private void ToUpperCase_OnClick(object? sender, RoutedEventArgs e)
