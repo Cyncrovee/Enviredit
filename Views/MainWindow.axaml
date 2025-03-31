@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        MinWidth="300" MinHeight="100"
         x:Class="Enviredit.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
+        x:Name="MainWindowElement"
         Title="Enviredit">
 
     <Design.DataContext>
@@ -25,14 +27,15 @@
     </Window.Styles>
 
     <Grid x:Name="MainGrid" ColumnDefinitions="200, *" RowDefinitions="30, *">
+        <!-- MENU BAR -->
         <Menu Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" DockPanel.Dock="Top">
             <!-- FILE -->
             <MenuItem Classes="topMenu" Header="File">
                 <MenuItem Click="Open_OnClick" Header="Open" InputGesture="Ctrl+o" HotKey="Ctrl+o"/>
-                <MenuItem Click="OpenFolder_OnClick" Header="Open Folder"/>
+                <MenuItem Click="OpenFolder_OnClick" Header="Open Folder" InputGesture="Ctrl+Shift+o" HotKey="Ctrl+Shift+o"/>
                 <Separator/>
                 <MenuItem Click="Save_OnClick" Header="Save" InputGesture="Ctrl+s" HotKey="Ctrl+s"/>
-                <MenuItem Click="SaveAs_OnClick" Header="Save As"/>
+                <MenuItem Click="SaveAs_OnClick" Header="Save As" InputGesture="Ctrl+Shift+s" HotKey="Ctrl+Shift+s"/>
             </MenuItem>
             <!-- EDIT -->
             <MenuItem Classes="topMenu" Header="Edit">
@@ -68,7 +71,7 @@
                     <MenuItem Click="ConvertTabs_OnClick" Header="Convert Tabs To Spaces" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ConvertTabsToSpaces }"/>
                 </MenuItem>
                 <MenuItem Header="Theme">
-                    <ComboBox x:Name="ThemeOptions" SelectionChanged="ThemeOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.ActualThemeVariant }">
+                    <ComboBox x:Name="ThemeOptions" SelectionChanged="ThemeOptions_SelectionChanged" PlaceholderText="{ Binding #MainWindowElement.RequestedThemeVariant}">
                         <ComboBoxItem Content="Follow System"/>
                         <ComboBoxItem Content="Light"/>
                         <ComboBoxItem Content="Dark"/>
@@ -85,9 +88,11 @@
                 </MenuItem>
                 <Separator/>
                 <MenuItem Click="ShowGridLines_OnClick" Header="Grid Lines" ToggleType="CheckBox" IsChecked="{ Binding #MainGrid.ShowGridLines }"/>
+                <Separator/>
+                <MenuItem Click="ManualLoadSettings_OnClick" Header="Load Settings"/>
             </MenuItem>
-            <MenuItem Classes="topMenu" Header="Load Settings" Click="ManualLoadSettings_OnClick"/>
         </Menu>
+        <!-- MAIN UI -->
         <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="0" Grid.Row="1" Classes="fileList" MinWidth="200" MaxWidth="200" HorizontalAlignment="Left" Margin="5,5,5,5">
             <ListBox.ContextMenu>
                 <ContextMenu>

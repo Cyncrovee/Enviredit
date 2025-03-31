@@ -38,12 +38,12 @@ public partial class MainWindow : Window
         );
         if (folder[0] == null) return;
         LocalSetCurrentFolder(folder[0].TryGetLocalPath());
-        Console.WriteLine(LocalGetCurrentFolder());
         PopulateFileList();
     }
     private void Save_OnClick(object? sender, RoutedEventArgs e)
     {
         SaveFile();
+        PopulateFileList();
     }
     private async void SaveAs_OnClick(object? sender, RoutedEventArgs e)
     {
@@ -51,11 +51,11 @@ public partial class MainWindow : Window
         {
             Title = "Save File As...",
         });
-        if (file == null) return;
-        var selectedFile = file.TryGetLocalPath();
+        var selectedFile = file?.TryGetLocalPath();
         if (selectedFile == null) return;
         LocalSetCurrentFile(selectedFile);
         SaveFile();
+        PopulateFileList();
     }
 
 
@@ -207,11 +207,6 @@ public partial class MainWindow : Window
         CreateSettingsFile();
         SaveSettings();
     }
-    //////////
-    //
-    // LOAD SETTINGS
-    //
-    //////////
     private void ManualLoadSettings_OnClick(object? sender, RoutedEventArgs e)
     {
         CreateSettingsFile();

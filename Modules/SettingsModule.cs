@@ -8,13 +8,13 @@ namespace Enviredit.Views;
 
 public class SettingsClass
 {
-    public string OptTheme { get; set; }
-    public bool OptHighlightLine { get; set; }
-    public bool OptShowSpaces { get; set; }
-    public bool OptShowTabs { get; set; }
-    public bool OptConvertTabs { get; set; }
-    public bool OptShowGridLine { get; set; }
-    public int OptIndentSpacing { get; set; }
+    public required string OptTheme { get; init; }
+    public bool OptHighlightLine { get; init; }
+    public bool OptShowSpaces { get; init; }
+    public bool OptShowTabs { get; init; }
+    public bool OptConvertTabs { get; init; }
+    public bool OptShowGridLine { get; init; }
+    public int OptIndentSpacing { get; init; }
 }
 public partial class MainWindow : Window
 {
@@ -44,6 +44,7 @@ public partial class MainWindow : Window
     private void LoadSettings()
     {
         // Deserialize JSON
+        if (LocalGetSettingsFile() == null) return;
         using StreamReader reader = new StreamReader(LocalGetSettingsFile());
         var settingsFileContents = reader.ReadToEnd();
         var settingsOutput = JsonSerializer.Deserialize<SettingsClass>(settingsFileContents);
@@ -80,6 +81,7 @@ public partial class MainWindow : Window
             Console.WriteLine("Settings file not found, Creating...");
             Directory.CreateDirectory(settingsFileDir);
             File.Create(settingsFile);
+            LocalSetSettingsFile(settingsFile);
         }
         LocalSetSettingsFile(settingsFile);
     }
