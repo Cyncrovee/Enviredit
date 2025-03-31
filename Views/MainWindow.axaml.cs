@@ -1,9 +1,5 @@
-using System;
-using System.IO;
-using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
-using Avalonia.Interactivity;
 using Enviredit.ViewModels;
 
 namespace Enviredit.Views;
@@ -14,15 +10,20 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        // Add contents to combo boxes
         ScrollBarVisibility[] scrollBarVisibility = [ScrollBarVisibility.Auto, ScrollBarVisibility.Disabled, ScrollBarVisibility.Hidden, ScrollBarVisibility.Visible];
-
         foreach (var opt in scrollBarVisibility)
         {
             VBarOptions.Items.Add(opt);
             HBarOptions.Items.Add(opt);
         }
+        for (int x = 0; x < 64; x++)
+        {
+            IndentOptions.Items.Add(x);
+        }
     }
 
+    // Functions to get/set properties in the view model
     private string LocalGetCurrentFile()
     {
         var vm = (DataContext as MainWindowViewModel);

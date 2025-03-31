@@ -67,6 +67,9 @@
                     <MenuItem Click="ShowTabs_OnClick" Header="Show Tabs" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ShowTabs }"/>
                     <MenuItem Click="ConvertTabs_OnClick" Header="Convert Tabs To Spaces" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ConvertTabsToSpaces }"/>
                 </MenuItem>
+                <MenuItem Header="Indentation Size">
+                    <ComboBox x:Name="IndentOptions" SelectionChanged="IndentOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.Options.IndentationSize}"/>
+                </MenuItem>
                 <MenuItem Header="Vertical Scrollbar Visibility">
                     <ComboBox x:Name="VBarOptions" SelectionChanged="VBarOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.VerticalScrollBarVisibility }"/>
                 </MenuItem>

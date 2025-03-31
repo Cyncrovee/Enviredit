@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using Enviredit.ViewModels;
 
 namespace Enviredit.Views;
 
@@ -156,6 +155,13 @@ public partial class MainWindow : Window
         CreateSettingsFile();
         SaveSettings();
     }
+
+    private void IndentOptions_SelectionChanged(object? sender, RoutedEventArgs e)
+    {
+        Editor.Options.IndentationSize = IndentOptions.SelectedIndex;
+        CreateSettingsFile();
+        SaveSettings();
+    }
     private void VBarOptions_SelectionChanged(object? sender, RoutedEventArgs e)
     {
         if (VBarOptions.SelectedItem == null) return;
@@ -176,6 +182,11 @@ public partial class MainWindow : Window
         CreateSettingsFile();
         SaveSettings();
     }
+    //////////
+    //
+    // LOAD SETTINGS
+    //
+    //////////
     private void ManualLoadSettings_OnClick(object? sender, RoutedEventArgs e)
     {
         CreateSettingsFile();

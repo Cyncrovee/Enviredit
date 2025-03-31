@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Enviredit.ViewModels;
 
 namespace Enviredit.Views;
 
