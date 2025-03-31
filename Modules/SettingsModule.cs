@@ -2,11 +2,13 @@ using System;
 using System.IO;
 using System.Text.Json;
 using Avalonia.Controls;
+using Avalonia.Styling;
 
 namespace Enviredit.Views;
 
 public class SettingsClass
 {
+    public string OptTheme { get; set; }
     public bool OptHighlightLine { get; set; }
     public bool OptShowSpaces { get; set; }
     public bool OptShowTabs { get; set; }
@@ -25,6 +27,7 @@ public partial class MainWindow : Window
         // Set settings
         SettingsClass sc = new SettingsClass
         {
+            OptTheme = this.RequestedThemeVariant.Key.ToString(),
             OptShowSpaces = Editor.Options.ShowSpaces,
             OptHighlightLine = Editor.Options.HighlightCurrentLine,
             OptShowTabs = Editor.Options.ShowTabs,
@@ -46,6 +49,18 @@ public partial class MainWindow : Window
         var settingsOutput = JsonSerializer.Deserialize<SettingsClass>(settingsFileContents);
         if (settingsOutput == null) return;
         // Apply settings
+        switch (settingsOutput.OptTheme)
+        {
+            case "Default":
+                this.RequestedThemeVariant = ThemeVariant.Default;
+                break;
+            case "Light":
+                this.RequestedThemeVariant = ThemeVariant.Light;
+                break;
+            case "Dark":
+                this.RequestedThemeVariant = ThemeVariant.Dark;
+                break;
+        }
         Editor.Options.ShowSpaces = settingsOutput.OptShowSpaces;
         Editor.Options.HighlightCurrentLine = settingsOutput.OptHighlightLine;
         Editor.Options.ShowTabs = settingsOutput.OptShowTabs;

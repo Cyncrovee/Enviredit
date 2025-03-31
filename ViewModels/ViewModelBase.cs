@@ -12,6 +12,8 @@ public partial class ViewModelBase : ObservableObject
     private string _currentFolder = String.Empty;
     [ObservableProperty]
     private string _settingsFile = String.Empty;
+    [ObservableProperty]
+    private string _deletionFile = String.Empty;
     // Get properties
     public string GetCurrentFile()
     {
@@ -25,6 +27,10 @@ public partial class ViewModelBase : ObservableObject
     {
         return _settingsFile;
     }
+    public string GetDeletionFile()
+    {
+        return _deletionFile;
+    }
     // Update properties
     public void UpdateCurrentFile(string update)
     {
@@ -37,5 +43,9 @@ public partial class ViewModelBase : ObservableObject
     public void UpdateSettingsFile(string update)
     {
         _settingsFile = update;
+    }
+    public void UpdateDeletionFile(string update)
+    {
+        _deletionFile = update;
     }
 }

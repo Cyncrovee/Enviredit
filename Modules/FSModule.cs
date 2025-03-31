@@ -14,6 +14,20 @@ public partial class MainWindow : Window
         string content = await reader.ReadToEndAsync();
         Editor.Document.Text = content;
     }
+    private async void SaveFile()
+    {
+        if (LocalGetCurrentFile() == string.Empty) return;
+        await using StreamWriter writer = new StreamWriter(LocalGetCurrentFile());
+        foreach (var content in Editor.Document.Text)
+        {
+            await writer.WriteAsync(content);
+        }
+    }
+    private void DeleteFile()
+    {
+        if (LocalGetDeletionFile() == string.Empty) return;
+        File.Delete(LocalGetDeletionFile());
+    }
     private void PopulateFileList()
     {
         // Get the names of the files from the current folder

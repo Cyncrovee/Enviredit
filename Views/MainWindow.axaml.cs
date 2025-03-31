@@ -23,7 +23,7 @@ public partial class MainWindow : Window
         }
     }
 
-    // Functions to get/set properties in the view model
+    // Functions to get properties in the view model
     private string LocalGetCurrentFile()
     {
         var vm = (DataContext as MainWindowViewModel);
@@ -39,6 +39,12 @@ public partial class MainWindow : Window
         var vm = (DataContext as MainWindowViewModel);
         return vm.GetSettingsFile();
     }
+    private string LocalGetDeletionFile()
+    {
+        var vm = (DataContext as MainWindowViewModel);
+        return vm.GetDeletionFile();
+    }
+    // Functions to set properties in the view model
     private void LocalSetCurrentFile(string input)
     {
         var vm = (DataContext as MainWindowViewModel);
@@ -53,5 +59,10 @@ public partial class MainWindow : Window
     {
         var vm = (DataContext as MainWindowViewModel);
         vm.UpdateSettingsFile(input);
+    }
+    private void LocalSetDeletionFile(string input)
+    {
+        var vm = (DataContext as MainWindowViewModel);
+        vm.UpdateDeletionFile(input);
     }
 }

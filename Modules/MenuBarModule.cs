@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using Avalonia.Styling;
 
 namespace Enviredit.Views;
 
@@ -42,12 +43,19 @@ public partial class MainWindow : Window
     }
     private void Save_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (LocalGetCurrentFile() == string.Empty) return;
-        using StreamWriter writer = new StreamWriter(LocalGetCurrentFile());
-        foreach (var content in Editor.Document.Text)
+        SaveFile();
+    }
+    private async void SaveAs_OnClick(object? sender, RoutedEventArgs e)
+    {
+        var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
         {
-            writer.WriteAsync(content);
-        }
+            Title = "Save File As...",
+        });
+        if (file == null) return;
+        var selectedFile = file.TryGetLocalPath();
+        if (selectedFile == null) return;
+        LocalSetCurrentFile(selectedFile);
+        SaveFile();
     }
 
 
@@ -155,7 +163,24 @@ public partial class MainWindow : Window
         CreateSettingsFile();
         SaveSettings();
     }
-
+    private void ThemeOptions_SelectionChanged(object? sender, RoutedEventArgs e)
+    {
+        if (ThemeOptions.SelectedItem == null) return;
+        switch (ThemeOptions.SelectedIndex)
+        {
+            case 0:
+                this.RequestedThemeVariant = ThemeVariant.Default;
+                break;
+            case 1:
+                this.RequestedThemeVariant = ThemeVariant.Light;
+                break;
+            case 2:
+                this.RequestedThemeVariant = ThemeVariant.Dark;
+                break;
+        }
+        CreateSettingsFile();
+        SaveSettings();
+    }
     private void IndentOptions_SelectionChanged(object? sender, RoutedEventArgs e)
     {
         Editor.Options.IndentationSize = IndentOptions.SelectedIndex;

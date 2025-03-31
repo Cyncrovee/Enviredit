@@ -32,7 +32,7 @@
                 <MenuItem Click="OpenFolder_OnClick" Header="Open Folder"/>
                 <Separator/>
                 <MenuItem Click="Save_OnClick" Header="Save" InputGesture="Ctrl+s" HotKey="Ctrl+s"/>
-                <MenuItem Header="Save As"/>
+                <MenuItem Click="SaveAs_OnClick" Header="Save As"/>
             </MenuItem>
             <!-- EDIT -->
             <MenuItem Classes="topMenu" Header="Edit">
@@ -43,12 +43,12 @@
                 <MenuItem Click="CopyText_OnClick" Header="Copy" InputGesture="Ctrl+c"/>
                 <MenuItem Click="PasteText_OnClick" Header="Paste" InputGesture="Ctrl+v"/>
                 <Separator/>
-                <MenuItem Click="DeleteText_OnClick" Header="Delete"/>
-                <MenuItem Click="SelectAll_OnClick" Header="Select All"/>
+                <MenuItem Click="DeleteText_OnClick" Header="Delete" InputGesture="Delete"/>
+                <MenuItem Click="SelectAll_OnClick" Header="Select All" InputGesture="Ctrl+a"/>
                 <Separator/>
-                <MenuItem Click="Find_OnClick" Header="Find"/>
-                <MenuItem Click="FindReplace_OnClick" Header="Find and Replace"/>
-                <MenuItem Click="CloseFindPanel_OnClick" Header="Close Find Panel"/>
+                <MenuItem Click="Find_OnClick" Header="Find" InputGesture="Ctrl+f"/>
+                <MenuItem Click="FindReplace_OnClick" Header="Find and Replace" InputGesture="Ctrl+Shift+f" HotKey="Ctrl+Shift+f"/>
+                <MenuItem Click="CloseFindPanel_OnClick" Header="Close Find Panel" InputGesture="Escape"/>
                 <Separator/>
                 <MenuItem Header="Copy...">
                     <MenuItem Click="CopyFolder_OnClick" Header="Copy Current Folder Path"/>
@@ -67,6 +67,13 @@
                     <MenuItem Click="ShowTabs_OnClick" Header="Show Tabs" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ShowTabs }"/>
                     <MenuItem Click="ConvertTabs_OnClick" Header="Convert Tabs To Spaces" ToggleType="CheckBox" IsChecked="{ Binding #Editor.Options.ConvertTabsToSpaces }"/>
                 </MenuItem>
+                <MenuItem Header="Theme">
+                    <ComboBox x:Name="ThemeOptions" SelectionChanged="ThemeOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.ActualThemeVariant }">
+                        <ComboBoxItem Content="Follow System"/>
+                        <ComboBoxItem Content="Light"/>
+                        <ComboBoxItem Content="Dark"/>
+                    </ComboBox>
+                </MenuItem>
                 <MenuItem Header="Indentation Size">
                     <ComboBox x:Name="IndentOptions" SelectionChanged="IndentOptions_SelectionChanged" PlaceholderText="{ Binding #Editor.Options.IndentationSize}"/>
                 </MenuItem>
@@ -81,7 +88,14 @@
             </MenuItem>
             <MenuItem Classes="topMenu" Header="Load Settings" Click="ManualLoadSettings_OnClick"/>
         </Menu>
-        <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="0" Grid.Row="1" Classes="fileList" MinWidth="200" MaxWidth="200" HorizontalAlignment="Left" Margin="5,5,5,5"/>
+        <ListBox x:Name="FileList" DoubleTapped="FileList_OnDoubleTapped" Grid.Column="0" Grid.Row="1" Classes="fileList" MinWidth="200" MaxWidth="200" HorizontalAlignment="Left" Margin="5,5,5,5">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Load File" Click="LoadFileContext_OnClick"/>
+                    <MenuItem Header="Delete File" Click="DeleteFileContext_OnClick"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
         <AvaloniaEdit:TextEditor Grid.Column="1" Grid.Row="1" x:Name="Editor" ShowLineNumbers="True" HorizontalAlignment="Stretch"/>
     </Grid>
 </Window>
