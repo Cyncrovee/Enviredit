@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Styling;

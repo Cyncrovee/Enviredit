@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
@@ -36,9 +35,16 @@ public partial class MainWindow : Window
             AllowMultiple = false
         }
         );
-        if (folder[0] == null) return;
-        LocalSetCurrentFolder(folder[0].TryGetLocalPath());
-        PopulateFileList();
+        try
+        {
+            if (folder[0].TryGetLocalPath() == null) return;
+            LocalSetCurrentFolder(folder[0].TryGetLocalPath());
+            PopulateFileList();
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine("OpenFolder_OnClick error: " + exception);
+        }
     }
     private void Save_OnClick(object? sender, RoutedEventArgs e)
     {

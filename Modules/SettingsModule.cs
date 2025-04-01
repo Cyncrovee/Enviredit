@@ -44,7 +44,6 @@ public partial class MainWindow : Window
     private void LoadSettings()
     {
         // Deserialize JSON
-        if (LocalGetSettingsFile() == null) return;
         using StreamReader reader = new StreamReader(LocalGetSettingsFile());
         var settingsFileContents = reader.ReadToEnd();
         var settingsOutput = JsonSerializer.Deserialize<SettingsClass>(settingsFileContents);
