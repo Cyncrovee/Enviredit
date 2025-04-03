@@ -172,18 +172,13 @@ public partial class MainWindow : Window
     private void ThemeOptions_SelectionChanged(object? sender, RoutedEventArgs e)
     {
         if (ThemeOptions.SelectedItem == null) return;
-        switch (ThemeOptions.SelectedIndex)
+        RequestedThemeVariant = ThemeOptions.SelectedIndex switch
         {
-            case 0:
-                this.RequestedThemeVariant = ThemeVariant.Default;
-                break;
-            case 1:
-                this.RequestedThemeVariant = ThemeVariant.Light;
-                break;
-            case 2:
-                this.RequestedThemeVariant = ThemeVariant.Dark;
-                break;
-        }
+            0 => ThemeVariant.Default,
+            1 => ThemeVariant.Light,
+            2 => ThemeVariant.Dark,
+            _ => RequestedThemeVariant
+        };
         CreateSettingsFile();
         SaveSettings();
     }

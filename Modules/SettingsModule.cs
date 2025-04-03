@@ -27,7 +27,7 @@ public partial class MainWindow : Window
         // Set settings
         SettingsClass sc = new SettingsClass
         {
-            OptTheme = this.RequestedThemeVariant.Key.ToString(),
+            OptTheme = RequestedThemeVariant.Key.ToString(),
             OptShowSpaces = Editor.Options.ShowSpaces,
             OptHighlightLine = Editor.Options.HighlightCurrentLine,
             OptShowTabs = Editor.Options.ShowTabs,
@@ -37,30 +37,25 @@ public partial class MainWindow : Window
         };
         // Serialize JSON and write to file
         var settingsInput= JsonSerializer.Serialize(sc, _jsonOptions);
-        using StreamWriter writer = new StreamWriter(LocalGetSettingsFile());
+        using var writer = new StreamWriter(LocalGetSettingsFile());
         writer.Write(settingsInput);
     }
 
     private void LoadSettings()
     {
         // Deserialize JSON
-        using StreamReader reader = new StreamReader(LocalGetSettingsFile());
+        using var reader = new StreamReader(LocalGetSettingsFile());
         var settingsFileContents = reader.ReadToEnd();
         var settingsOutput = JsonSerializer.Deserialize<SettingsClass>(settingsFileContents);
         if (settingsOutput == null) return;
         // Apply settings
-        switch (settingsOutput.OptTheme)
+        RequestedThemeVariant = settingsOutput.OptTheme switch
         {
-            case "Default":
-                this.RequestedThemeVariant = ThemeVariant.Default;
-                break;
-            case "Light":
-                this.RequestedThemeVariant = ThemeVariant.Light;
-                break;
-            case "Dark":
-                this.RequestedThemeVariant = ThemeVariant.Dark;
-                break;
-        }
+            "Default" => ThemeVariant.Default,
+            "Light" => ThemeVariant.Light,
+            "Dark" => ThemeVariant.Dark,
+            _ => RequestedThemeVariant
+        };
         Editor.Options.ShowSpaces = settingsOutput.OptShowSpaces;
         Editor.Options.HighlightCurrentLine = settingsOutput.OptHighlightLine;
         Editor.Options.ShowTabs = settingsOutput.OptShowTabs;
@@ -70,7 +65,7 @@ public partial class MainWindow : Window
     }
     private void CreateSettingsFile()
     {
-        // If the settings file (config.txt) does not exist, create it
+        // If the settings file (~/.config/config.txt) does not exist, create it
         var settingsFileDir= (Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/");
         var settingsFile= (Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/config.json");
         if (!File.Exists(settingsFile))

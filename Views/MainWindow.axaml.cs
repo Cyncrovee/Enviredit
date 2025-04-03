@@ -15,36 +15,35 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         // Add contents to combo boxes
-        ScrollBarVisibility[] scrollBarVisibility = [ScrollBarVisibility.Auto, ScrollBarVisibility.Disabled, ScrollBarVisibility.Hidden, ScrollBarVisibility.Visible];
+        ScrollBarVisibility[] scrollBarVisibility =
+        [
+            ScrollBarVisibility.Auto, ScrollBarVisibility.Disabled, ScrollBarVisibility.Hidden,
+            ScrollBarVisibility.Visible
+        ];
         foreach (var opt in scrollBarVisibility)
         {
             VBarOptions.Items.Add(opt);
             HBarOptions.Items.Add(opt);
         }
-        for (int x = 0; x < 64; x++)
-        {
-            IndentOptions.Items.Add(x);
-        }
-        var settingsFile= (Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "/.config/Enviredit/config.json");
+
+        for (var x = 0; x < 64; x++) IndentOptions.Items.Add(x);
+        var settingsFile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+                           "/.config/Enviredit/config.json";
+        // This would normally be handled by the LoadSettings() function in the settings module,
+        // However that doesn't work here due to being unable to access the view model
         // Deserialize JSON
-        if (LocalGetSettingsFile() == null) return;
-        using StreamReader reader = new StreamReader(settingsFile);
+        using var reader = new StreamReader(settingsFile);
         var settingsFileContents = reader.ReadToEnd();
         var settingsOutput = JsonSerializer.Deserialize<SettingsClass>(settingsFileContents);
         if (settingsOutput == null) return;
         // Apply settings
-        switch (settingsOutput.OptTheme)
+        RequestedThemeVariant = settingsOutput.OptTheme switch
         {
-            case "Default":
-                this.RequestedThemeVariant = ThemeVariant.Default;
-                break;
-            case "Light":
-                this.RequestedThemeVariant = ThemeVariant.Light;
-                break;
-            case "Dark":
-                this.RequestedThemeVariant = ThemeVariant.Dark;
-                break;
-        }
+            "Default" => ThemeVariant.Default,
+            "Light" => ThemeVariant.Light,
+            "Dark" => ThemeVariant.Dark,
+            _ => RequestedThemeVariant
+        };
         Editor.Options.ShowSpaces = settingsOutput.OptShowSpaces;
         Editor.Options.HighlightCurrentLine = settingsOutput.OptHighlightLine;
         Editor.Options.ShowTabs = settingsOutput.OptShowTabs;
@@ -54,53 +53,49 @@ public partial class MainWindow : Window
     }
 
     // Functions to get properties in the view model
+    // These exist to avoid having to repeatedly make a variable to reference the view model
     private string LocalGetCurrentFile()
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return String.Empty;
-        return vm.GetCurrentFile();
+        return DataContext is not MainWindowViewModel vm ? string.Empty : vm.GetCurrentFile();
     }
+
     private string LocalGetCurrentFolder()
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return String.Empty;
-        return vm.GetCurrentFolder();
+        return DataContext is not MainWindowViewModel vm ? string.Empty : vm.GetCurrentFolder();
     }
+
     private string LocalGetSettingsFile()
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return String.Empty;
-        return vm.GetSettingsFile();
+        return DataContext is not MainWindowViewModel vm ? string.Empty : vm.GetSettingsFile();
     }
+
     private string LocalGetDeletionFile()
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return String.Empty;
-        return vm.GetDeletionFile();
+        return DataContext is not MainWindowViewModel vm ? string.Empty : vm.GetDeletionFile();
     }
+
     // Functions to set properties in the view model
     private void LocalSetCurrentFile(string input)
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        vm.UpdateCurrentFile(input);
+        var vm = DataContext as MainWindowViewModel;
+        vm?.UpdateCurrentFile(input);
     }
+
     private void LocalSetCurrentFolder(string input)
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        vm.UpdateCurrentFolder(input);
+        var vm = DataContext as MainWindowViewModel;
+        vm?.UpdateCurrentFolder(input);
     }
+
     private void LocalSetSettingsFile(string input)
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        vm.UpdateSettingsFile(input);
+        var vm = DataContext as MainWindowViewModel;
+        vm?.UpdateSettingsFile(input);
     }
+
     private void LocalSetDeletionFile(string input)
     {
-        var vm = (DataContext as MainWindowViewModel);
-        if (vm == null) return;
-        vm.UpdateDeletionFile(input);
+        var vm = DataContext as MainWindowViewModel;
+        vm?.UpdateDeletionFile(input);
     }
 }

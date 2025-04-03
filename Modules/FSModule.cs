@@ -10,14 +10,14 @@ public partial class MainWindow : Window
         // Read text from a file
         // Then set the editors text contents to the file contents
         Editor.Clear();
-        using StreamReader reader = new StreamReader(LocalGetCurrentFile());
+        using var reader = new StreamReader(LocalGetCurrentFile());
         string content = await reader.ReadToEndAsync();
         Editor.Document.Text = content;
     }
     private async void SaveFile()
     {
         if (LocalGetCurrentFile() == string.Empty) return;
-        await using StreamWriter writer = new StreamWriter(LocalGetCurrentFile());
+        await using var writer = new StreamWriter(LocalGetCurrentFile());
         foreach (var content in Editor.Document.Text)
         {
             await writer.WriteAsync(content);

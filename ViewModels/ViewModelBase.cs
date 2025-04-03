@@ -17,35 +17,35 @@ public partial class ViewModelBase : ObservableObject
     // Get properties
     public string GetCurrentFile()
     {
-        return _currentFile;
+        return CurrentFile;
     }
     public string GetCurrentFolder()
     {
-        return _currentFolder;
+        return CurrentFolder;
     }
     public string GetSettingsFile()
     {
-        return _settingsFile;
+        return SettingsFile;
     }
     public string GetDeletionFile()
     {
-        return _deletionFile;
+        return DeletionFile;
     }
     // Update properties
     public void UpdateCurrentFile(string update)
     {
-        _currentFile = update;
+        CurrentFile = update;
     }
     public void UpdateCurrentFolder(string update)
     {
-        _currentFolder = update;
+        CurrentFolder = update;
     }
     public void UpdateSettingsFile(string update)
     {
-        _settingsFile = update;
+        SettingsFile = update;
     }
     public void UpdateDeletionFile(string update)
     {
-        _deletionFile = update;
+        DeletionFile = update;
     }
 }
